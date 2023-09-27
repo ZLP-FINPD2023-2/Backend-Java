@@ -1,23 +1,31 @@
 package main
 
 import (
-	"net/http"
+    "log"
+    "net/http"
 
-	"github.com/gin-gonic/gin"
+    "github.com/gin-gonic/gin"
+
+    "app/pkg/common/config"
 )
 
 func main() {
-    port := ":8080" // В последствии из конфига
-	// dbUrl := *из конфига*
+    cfg, err := config.InitConfig()
+    if err != nil {
+        log.Fatalln(err)
+    }
 
-	r := gin.Default()
-	// db.Init(dbUrl)
+    port := cfg.Port // В последствии из конфига
+    // dbUrl := *из конфига*
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "testmessage",
-		})
-	})
+    r := gin.Default()
+    // db.Init(dbUrl)
 
-	r.Run(port)
+    r.GET("/", func(c *gin.Context) {
+        c.JSON(http.StatusOK, gin.H{
+            "message": "testmessage",
+        })
+    })
+
+    r.Run(port)
 }
