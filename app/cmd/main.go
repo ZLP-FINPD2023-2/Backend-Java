@@ -15,11 +15,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	port := cfg.Port // В последствии из конфига
-	// dbUrl := *из конфига*
-
 	r := gin.Default()
-	// db.Init(dbUrl)
+	// db.Init(cfg.dbUrl)
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -27,5 +24,5 @@ func main() {
 		})
 	})
 
-	r.Run(port)
+	r.Run(cfg.Port)
 }
