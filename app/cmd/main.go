@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/pkg/common/db"
 	"log"
 	"net/http"
 
@@ -15,11 +16,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	port := cfg.Port // В последствии из конфига
-	// dbUrl := *из конфига*
+	port := cfg.Port
 
 	r := gin.Default()
-	// db.Init(dbUrl)
+	_, err = db.Init(cfg.DB)
+	if err != nil {
+		log.Fatalf("Error connecting to the database: %v", err)
+	}
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

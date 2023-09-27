@@ -5,5 +5,15 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+    depends_on:
+      - master_postgres
     ports:
       - 80:8080
+
+  master_postgres:
+    image: postgres:13.3
+    env_file:
+      - ./app/pkg/common/envs/.env.dev
+    ports:
+      - '5432:5432'
+
