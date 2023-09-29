@@ -5,27 +5,28 @@ import (
 	"log"
 
 	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
 	"app/pkg/common/config"
 )
 
 func Init(config config.DBConfig) (*gorm.DB, error) {
-	user := config.User
-	password := config.Password
-	dbName := config.Name
-	host := config.Host
-	port := config.Port
-	sslMode := config.SSLMode
-
 	dsn := fmt.Sprintf(
 		"user=%s password=%s dbname=%s host=%s port=%s sslmode=%s",
-		user, password, dbName, host, port, sslMode,
+		config.User, config.Password, config.Name, config.Host, config.Port, config.SSLMode,
 	)
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		log.Println("Connect to sqlite...")
+		dsn := "sqlite.db"
+		db, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{})
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	log.Println("Connected to database")
 	return db, nil
 }

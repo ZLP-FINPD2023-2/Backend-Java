@@ -5,9 +5,9 @@ import (
 )
 
 type DBConfig struct {
-	User     string `mapstructure:"DB_USER"`
+	User     string `mapstructure:"POSTGRES_USER"`
 	Password string `mapstructure:"POSTGRES_PASSWORD"`
-	Name     string `mapstructure:"DB_NAME"`
+	Name     string `mapstructure:"POSTGRES_DB"`
 	Host     string `mapstructure:"DB_HOST"`
 	Port     string `mapstructure:"DB_PORT"`
 	SSLMode  string `mapstructure:"DB_SSL_MODE"`
@@ -19,9 +19,15 @@ type Config struct {
 }
 
 // Инициализирует структуру Config
-// Заполняет структуру параметрами из файла или окружения
+// Заполняет структуру параметрами окружения
 func InitConfig() (*Config, error) {
 	viper.SetDefault("PORT", ":8080")
+	viper.SetDefault("POSTGRES_USER", "admin")
+	viper.SetDefault("POSTGRES_PASSWORD", "password")
+	viper.SetDefault("POSTGRES_DB", "postgres")
+	viper.SetDefault("DB_HOST", "localhost")
+	viper.SetDefault("DB_PORT", "5432")
+	viper.SetDefault("DB_SSL_MODE", "disable")
 
 	viper.AutomaticEnv()
 
