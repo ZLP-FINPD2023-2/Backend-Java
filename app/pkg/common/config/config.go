@@ -6,8 +6,18 @@ import (
 	"github.com/spf13/viper"
 )
 
+type DBConfig struct {
+	User     string `mapstructure:"DB_USER"`
+	Password string `mapstructure:"POSTGRES_PASSWORD"`
+	Name     string `mapstructure:"DB_NAME"`
+	Host     string `mapstructure:"DB_HOST"`
+	Port     string `mapstructure:"DB_PORT"`
+	SSLMode  string `mapstructure:"DB_SSL_MODE"`
+}
+
 type Config struct {
 	Port string `mapstructure:"PORT"`
+	DB   DBConfig
 }
 
 // Инициализирует структуру Config
@@ -19,6 +29,7 @@ func InitConfig() (*Config, error) {
 	viper.AddConfigPath("./pkg/common/envs")
 	viper.SetConfigType("env")
 
+	viper.SetDefault("Port", ":8080")
 	if err := viper.ReadInConfig(); err != nil {
 		log.Println(err)
 	}
@@ -27,6 +38,10 @@ func InitConfig() (*Config, error) {
 
 	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
+		return nil, err
+	}
+
+	if err := viper.Unmarshal(&config.DB); err != nil {
 		return nil, err
 	}
 

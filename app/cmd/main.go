@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"app/pkg/common/config"
+	"app/pkg/common/db"
 )
 
 func main() {
@@ -16,7 +17,10 @@ func main() {
 	}
 
 	r := gin.Default()
-	// db.Init(cfg.dbUrl)
+	_, err = db.Init(cfg.DB)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

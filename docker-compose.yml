@@ -5,7 +5,16 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+    depends_on:
+      - db
     ports:
       - 80:8080
     env_file:
       - ./app/pkg/common/envs/.env.dev
+
+  db:
+    image: postgres
+    env_file:
+      - ./app/pkg/common/envs/.env.dev
+    ports:
+      - 5432:5432
