@@ -1,8 +1,6 @@
 package config
 
 import (
-	"log"
-
 	"github.com/spf13/viper"
 )
 
@@ -24,15 +22,6 @@ type Config struct {
 // Заполняет структуру параметрами из файла или окружения
 func InitConfig() (*Config, error) {
 	viper.SetDefault("PORT", ":8080")
-
-	viper.SetConfigName(".env.dev")
-	viper.AddConfigPath("./pkg/common/envs")
-	viper.SetConfigType("env")
-
-	viper.SetDefault("Port", ":8080")
-	if err := viper.ReadInConfig(); err != nil {
-		log.Println(err)
-	}
 
 	viper.AutomaticEnv()
 
