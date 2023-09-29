@@ -1,13 +1,13 @@
 package main
 
 import (
-	"app/pkg/common/db"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"app/pkg/common/config"
+	"app/pkg/common/db"
 )
 
 func main() {
@@ -16,12 +16,10 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	port := cfg.Port
-
 	r := gin.Default()
 	_, err = db.Init(cfg.DB)
 	if err != nil {
-		log.Fatalf("Error connecting to the database: %v", err)
+		log.Fatalln(err)
 	}
 
 	r.GET("/", func(c *gin.Context) {
@@ -30,5 +28,5 @@ func main() {
 		})
 	})
 
-	r.Run(port)
+	r.Run(cfg.Port)
 }

@@ -1,11 +1,13 @@
 package db
 
 import (
-	"app/pkg/common/config"
 	"fmt"
+	"log"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
+
+	"app/pkg/common/config"
 )
 
 func Init(config config.DBConfig) (*gorm.DB, error) {
@@ -16,8 +18,10 @@ func Init(config config.DBConfig) (*gorm.DB, error) {
 	port := config.Port
 	sslMode := config.SSLMode
 
-	dsn := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=%s",
-		user, password, dbName, host, port, sslMode)
+	dsn := fmt.Sprintf(
+		"user=%s password=%s dbname=%s host=%s port=%s sslmode=%s",
+		user, password, dbName, host, port, sslMode,
+	)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err

@@ -6,7 +6,7 @@ import (
 
 type DBConfig struct {
 	User     string `mapstructure:"DB_USER"`
-	Password string `mapstructure:"DB_PASSWORD"`
+	Password string `mapstructure:"POSTGRES_PASSWORD"`
 	Name     string `mapstructure:"DB_NAME"`
 	Host     string `mapstructure:"DB_HOST"`
 	Port     string `mapstructure:"DB_PORT"`
@@ -24,18 +24,18 @@ func InitConfig() (*Config, error) {
 	viper.SetConfigType("env")
 
 	viper.SetDefault("Port", ":8080")
-	var dBConfig DBConfig
-	var config Config
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err
 	}
 
+	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
 		return nil, err
 	}
-	if err := viper.Unmarshal(&dBConfig); err != nil {
+
+	if err := viper.Unmarshal(&config.DB); err != nil {
 		return nil, err
 	}
-	config.DB = dBConfig
+
 	return &config, nil
 }
