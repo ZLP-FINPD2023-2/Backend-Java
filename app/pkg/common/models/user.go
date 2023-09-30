@@ -4,9 +4,11 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Name     string
-	Age      uint8
-	Gender   bool
-	Email    string
-	Password string
+	Email      string `gorm:"unique" json:"email"`
+	Password   string `json:"password"`
+	FirstName  string `json:"firstname"`
+	LastName   string `json:"lastname"`
+	Patronymic string `json:"patronymic"`
+	Age        uint8  `json:"age"`
+	Gender     bool   `json:"gender"`
 }
