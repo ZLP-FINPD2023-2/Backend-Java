@@ -1,6 +1,7 @@
 package db
 
 import (
+	"app/pkg/common/models"
 	"fmt"
 	"log"
 
@@ -28,5 +29,6 @@ func Init(config config.DBConfig) (*gorm.DB, error) {
 	}
 
 	log.Println("Connected to database")
+	db.AutoMigrate(&models.User{})
 	return db, nil
 }
