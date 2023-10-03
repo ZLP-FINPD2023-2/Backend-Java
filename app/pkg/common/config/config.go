@@ -18,9 +18,10 @@ type Config struct {
 	DB   DBConfig
 }
 
-// Инициализирует структуру Config
+var Cfg Config
+
 // Заполняет структуру параметрами окружения
-func InitConfig() (*Config, error) {
+func InitConfig() error {
 	viper.SetDefault("PORT", ":8080")
 	viper.SetDefault("POSTGRES_USER", "admin")
 	viper.SetDefault("POSTGRES_PASSWORD", "password")
@@ -31,14 +32,13 @@ func InitConfig() (*Config, error) {
 
 	viper.AutomaticEnv()
 
-	var config Config
-	if err := viper.Unmarshal(&config); err != nil {
-		return nil, err
+	if err := viper.Unmarshal(&Cfg); err != nil {
+		return err
 	}
 
-	if err := viper.Unmarshal(&config.DB); err != nil {
-		return nil, err
+	if err := viper.Unmarshal(&Cfg.DB); err != nil {
+		return err
 	}
 
-	return &config, nil
+	return nil
 }

@@ -12,10 +12,18 @@ import (
 	"app/pkg/common/models"
 )
 
-func Init(config config.DBConfig) (*gorm.DB, error) {
+var DB *gorm.DB
+
+func Init() error {
+	dbCfg := config.Cfg.DB
 	dsn := fmt.Sprintf(
 		"user=%s password=%s dbname=%s host=%s port=%s sslmode=%s",
-		config.User, config.Password, config.Name, config.Host, config.Port, config.SSLMode,
+		dbCfg.User,
+		dbCfg.Password,
+		dbCfg.Name,
+		dbCfg.Host,
+		dbCfg.Port,
+		dbCfg.SSLMode,
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -24,7 +32,7 @@ func Init(config config.DBConfig) (*gorm.DB, error) {
 		dsn := "sqlite.db"
 		db, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{})
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
 	log.Println("Connected to database")
@@ -34,5 +42,5 @@ func Init(config config.DBConfig) (*gorm.DB, error) {
 	}
 	log.Println("Migrated database")
 
-	return db, nil
+	return nil
 }

@@ -11,22 +11,20 @@ import (
 )
 
 func main() {
-	cfg, err := config.InitConfig()
-	if err != nil {
+	if err := config.InitConfig(); err != nil {
+		log.Fatalln(err)
+	}
+
+	if err := db.Init(); err != nil {
 		log.Fatalln(err)
 	}
 
 	r := gin.Default()
-	_, err = db.Init(cfg.DB)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "testmessage",
 		})
 	})
 
-	r.Run(cfg.Port)
+	r.Run(config.Cfg.Port)
 }
