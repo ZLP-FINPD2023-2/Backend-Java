@@ -26,18 +26,19 @@ func Init() error {
 		dbCfg.SSLMode,
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	var err error
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("Connect to sqlite...")
 		dsn := "sqlite.db"
-		db, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{})
+		DB, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{})
 		if err != nil {
 			return err
 		}
 	}
 	log.Println("Connected to database")
 
-	if err := db.AutoMigrate(&models.User{}); err != nil {
+	if err := DB.AutoMigrate(&models.User{}); err != nil {
 		log.Fatalln(err)
 	}
 	log.Println("Migrated database")

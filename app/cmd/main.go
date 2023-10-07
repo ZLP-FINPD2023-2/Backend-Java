@@ -2,10 +2,8 @@ package main
 
 import (
 	"log"
-	"net/http"
 
-	"github.com/gin-gonic/gin"
-
+	"app/pkg/common/api/routes"
 	"app/pkg/common/config"
 	"app/pkg/common/db"
 )
@@ -19,12 +17,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "testmessage",
-		})
-	})
+	r := routes.InitRouter()
 
 	r.Run(config.Cfg.Port)
 }
