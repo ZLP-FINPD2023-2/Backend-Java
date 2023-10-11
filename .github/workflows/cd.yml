@@ -57,6 +57,6 @@ jobs:
             cd /root/LFP_Backend
             git checkout dev
             git pull
-            docker compose -f docker-compose.prod.yml up --pull --build -d
+            docker compose -f docker-compose.prod.yml up -d --build --pull always
             docker container prune -f
             docker image prune -f
