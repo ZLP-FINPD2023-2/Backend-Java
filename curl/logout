@@ -1,0 +1,19 @@
+#!/bin/bash
+
+API_URL="http://localhost:8080/api/v1"
+LOGOUT_ENDPOINT="/auth/logout"
+
+
+# Проверка наличия аргумента (токена)
+if [ $# -eq 0 ]; then
+  echo "Usage: $0 <token>"
+  exit 1
+fi
+
+TOKEN="$1"
+
+# Отправляем POST-запрос для выхода
+RESPONSE=$(curl -s -X POST $API_URL$LOGOUT_ENDPOINT \
+  -H "Authorization: Bearer $TOKEN")
+
+echo $RESPONSE | jq

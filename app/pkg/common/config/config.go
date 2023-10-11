@@ -14,8 +14,9 @@ type DBConfig struct {
 }
 
 type Config struct {
-	Port string `mapstructure:"PORT"`
-	DB   DBConfig
+	Port      string `mapstructure:"PORT"`
+	SecretKey string `mapstructure:"SECRET_KEY"`
+	DB        DBConfig
 }
 
 var Cfg Config
@@ -23,6 +24,7 @@ var Cfg Config
 // Заполняет структуру параметрами окружения
 func InitConfig() error {
 	viper.SetDefault("PORT", ":8080")
+	viper.SetDefault("SECRET_KEY", "secret_key")
 	viper.SetDefault("POSTGRES_USER", "admin")
 	viper.SetDefault("POSTGRES_PASSWORD", "password")
 	viper.SetDefault("POSTGRES_DB", "postgres")
