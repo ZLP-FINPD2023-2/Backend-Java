@@ -1,9 +1,24 @@
-name: backend
+version: '3.8'
+name: backend-dev
 
 services:
-  app:
+  web:
     build:
       context: ./app
       dockerfile: Dockerfile
     ports:
       - 80:8080
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env.prod.db
+
+volumes:
+  postgres_data:

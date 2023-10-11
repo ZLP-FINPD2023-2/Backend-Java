@@ -1,14 +1,23 @@
-FROM golang as builder
+# Скачивание образа
+FROM golang:alpine as builder
 
-WORKDIR /usr/src/go-app
+# Установка рабочей директории
+WORKDIR /usr/src/app
 
-COPY . ./
+# Установка зависимостей
+COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o /usr/local/bin/go-app ./...
+# Копирование проекта
+COPY . ./
 
-FROM alpine
+# Сборка
+RUN go build -v -o /usr/local/bin/app ./cmd/main.go
 
-COPY --from=builder /usr/local/bin/go-app /usr/local/bin/go-app
+# Копирование entrypoint.sh
+COPY entrypoint.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-CMD ["go-app"]
+# Запуск
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["app"]
