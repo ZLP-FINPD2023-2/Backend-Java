@@ -3,9 +3,7 @@ name: backend
 
 services:
   web:
-    build:
-      context: ./app
-      dockerfile: Dockerfile.prod
+    image: ghcr.io/zlp-finpd2023-2/backend:dev
     command: ./app
     expose:
       - 8080
