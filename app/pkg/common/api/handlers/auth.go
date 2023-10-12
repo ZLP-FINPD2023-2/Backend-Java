@@ -30,7 +30,15 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-// Хендлер
+// @summary Login
+// @tags auth
+// @Description Обработка запроса на вход пользователя
+// @ID login
+// @Accept json
+// @Produce json
+// @Param req body LoginRequest true "Данные пользователя (email и пароль)"
+// @Router /api/v1/auth/login [post]
+// TODO - Сделать для ошибок/успеха свои json
 func Login(c *gin.Context) {
 	// Парсинг запроса
 	var req LoginRequest
@@ -78,9 +86,15 @@ func Login(c *gin.Context) {
 	)
 }
 
-// Регистрация
-
-// Хендлер
+// @summary Register
+// @tags auth
+// @Description Обработка запроса на регистрацию пользователя
+// @ID register
+// @Accept json
+// @Produce json
+// @Param user body models.User true "Данные о пользователе"
+// @Router /api/v1/auth/register [post]
+// TODO - Сделать для ошибок/успеха свои структуры
 func Register(c *gin.Context) {
 	// Парсинг запроса
 	var user models.User
@@ -126,7 +140,13 @@ func Register(c *gin.Context) {
 
 // Выход
 
-// Хендлер
+// @summary Logout
+// @tags auth
+// @Description Обработка запроса выход пользователя из системы
+// @ID logout
+// @Produce json
+// @Router /api/v1/auth/logout [post]
+// TODO - Сделать для ошибок/успеха свои структуры
 func Logout(c *gin.Context) {
 	// TODO: Реализовать выход
 	c.JSON(

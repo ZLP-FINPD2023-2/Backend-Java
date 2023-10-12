@@ -1,0 +1,105 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "ZLP-LFP API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1/",
+    "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "description": "Обработка запроса на вход пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "description": "Данные пользователя (email и пароль)",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "description": "Обработка запроса выход пользователя из системы",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout",
+                "operationId": "logout",
+                "responses": {}
+            }
+        },
+        "/api/v1/auth/register": {
+            "post": {
+                "description": "Обработка запроса на регистрацию пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "description": "Данные о пользователе",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "handlers.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object"
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

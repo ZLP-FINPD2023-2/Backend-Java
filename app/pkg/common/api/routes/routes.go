@@ -2,6 +2,8 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 
 	"app/pkg/common/api/handlers"
 	"app/pkg/common/api/middleware"
@@ -24,6 +26,8 @@ func InitRouter() *gin.Engine {
 			}
 		}
 	}
+
+	r.GET("/schemes/swagger-ui", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return r
 }
