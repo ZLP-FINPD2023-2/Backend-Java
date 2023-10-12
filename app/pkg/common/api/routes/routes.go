@@ -5,6 +5,7 @@ import (
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 
+	_ "app/docs"
 	"app/pkg/common/api/handlers"
 	"app/pkg/common/api/middleware"
 )
@@ -16,6 +17,7 @@ func InitRouter() *gin.Engine {
 	{
 		v1 := api.Group("/v1")
 		{
+			v1.GET("/schemes/swagger-ui/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 			auth := v1.Group("/auth")
 			{
 				auth.POST("/login", handlers.Login)
@@ -26,8 +28,5 @@ func InitRouter() *gin.Engine {
 			}
 		}
 	}
-
-	r.GET("/schemes/swagger-ui", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 	return r
 }
