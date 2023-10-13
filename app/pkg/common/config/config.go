@@ -13,10 +13,17 @@ type DBConfig struct {
 	SSLMode  string `mapstructure:"DB_SSL_MODE"`
 }
 
+type CorsConfig struct {
+	AllowedOrigins string `mapstructure:"ALLOWED_ORIGINS"`
+	AllowedMethods string `mapstructure:"ALLOWED_METHODS"`
+	AllowedHeaders string `mapstructure:"ALLOWED_HEADERS"`
+}
+
 type Config struct {
 	Port      string `mapstructure:"PORT"`
 	SecretKey string `mapstructure:"SECRET_KEY"`
 	DB        DBConfig
+	Cors      CorsConfig
 }
 
 var Cfg Config
@@ -31,6 +38,9 @@ func InitConfig() error {
 	viper.SetDefault("DB_HOST", "localhost")
 	viper.SetDefault("DB_PORT", "5432")
 	viper.SetDefault("DB_SSL_MODE", "disable")
+	viper.SetDefault("ALLOWED_ORIGINS", "*")
+	viper.SetDefault("ALLOWED_METHODS", "GET HEAD POST PUT DELETE OPTIONS PATCH")
+	viper.SetDefault("ALLOWED_HEADERS", "Content-Type Authorization Accept Cache-Control Allow")
 
 	viper.AutomaticEnv()
 
@@ -39,6 +49,10 @@ func InitConfig() error {
 	}
 
 	if err := viper.Unmarshal(&Cfg.DB); err != nil {
+		return err
+	}
+
+	if err := viper.Unmarshal(&Cfg.Cors); err != nil {
 		return err
 	}
 
