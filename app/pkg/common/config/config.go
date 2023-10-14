@@ -38,6 +38,7 @@ func InitConfig() error {
 	viper.SetDefault("DB_HOST", "localhost")
 	viper.SetDefault("DB_PORT", "5432")
 	viper.SetDefault("DB_SSL_MODE", "disable")
+
 	viper.SetDefault("ALLOWED_ORIGINS", "*")
 	viper.SetDefault("ALLOWED_METHODS", "GET HEAD POST PUT DELETE OPTIONS PATCH")
 	viper.SetDefault("ALLOWED_HEADERS", "Content-Type Authorization Accept Cache-Control Allow")

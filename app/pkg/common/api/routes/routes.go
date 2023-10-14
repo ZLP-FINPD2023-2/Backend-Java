@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"app/pkg/common/api/handlers"
@@ -11,7 +10,7 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.Default()
 
-	r.Use(cors.New(middleware.CorsConfig))
+	r.Use(middleware.InitCorsConfig())
 
 	api := r.Group("/api")
 	{
