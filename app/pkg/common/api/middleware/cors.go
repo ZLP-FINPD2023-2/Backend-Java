@@ -7,7 +7,7 @@ import (
 	"app/pkg/common/config"
 )
 
-func InitCorsConfig() gin.HandlerFunc {
+func CorsMiddleware() gin.HandlerFunc {
 	corsCfg := config.Cfg.Cors
 	CorsConfig := cors.DefaultConfig()
 

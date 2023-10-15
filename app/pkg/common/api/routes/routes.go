@@ -10,7 +10,7 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.Default()
 
-	r.Use(middleware.InitCorsConfig())
+	r.Use(middleware.CorsMiddleware())
 
 	api := r.Group("/api")
 	{
