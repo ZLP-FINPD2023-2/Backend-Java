@@ -9,7 +9,7 @@
     - `/login` - Вход
     - `/register` - Регистрация
 
-  * `/schemes/swagger-ui` - Документация
+  * `/schemes/swagger-ui/index.html` - Документация
 
 ## Правила взаимодействия с репозиторием
 
