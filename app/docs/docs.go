@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/api/v1/auth/login": {
             "post": {
-                "description": "Обработка запроса на вход пользователя",
+                "description": "Вход пользователя",
                 "consumes": [
                     "application/json"
                 ],
@@ -59,7 +59,7 @@ const docTemplate = `{
         },
         "/api/v1/auth/register": {
             "post": {
-                "description": "Обработка запроса на регистрацию пользователя",
+                "description": "Регистрация пользователя",
                 "consumes": [
                     "application/json"
                 ],
@@ -73,7 +73,7 @@ const docTemplate = `{
                 "operationId": "register",
                 "parameters": [
                     {
-                        "description": "Данные о пользователе",
+                        "description": "Данные пользователя",
                         "name": "user",
                         "in": "body",
                         "required": true,
@@ -117,7 +117,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/api/v1/",
 	Schemes:          []string{},
-	Title:            "ZLP-LFP API",
+	Title:            "Finapp API",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

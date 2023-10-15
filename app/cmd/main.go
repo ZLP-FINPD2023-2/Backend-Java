@@ -8,7 +8,7 @@ import (
 	"app/pkg/common/db"
 )
 
-// @title Todo App API
+// @title Finapp API
 // @version 1.0
 
 // @host localhost:8080

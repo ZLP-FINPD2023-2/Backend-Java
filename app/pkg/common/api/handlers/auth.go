@@ -32,14 +32,14 @@ type LoginRequest struct {
 
 // @summary Login
 // @tags auth
-// @Description Обработка запроса на вход пользователя
+// @Description Вход пользователя
 // @ID login
 // @Accept json
 // @Produce json
 // @Param req body LoginRequest true "Данные пользователя (email и пароль)"
 // @Router /api/v1/auth/login [post]
-// TODO - Сделать для ошибок/успеха свои json
 func Login(c *gin.Context) {
+	// TODO: Сделать для ошибок/успеха свои структуры
 	// Парсинг запроса
 	var req LoginRequest
 	if err := c.BindJSON(&req); err != nil {
@@ -88,14 +88,14 @@ func Login(c *gin.Context) {
 
 // @summary Register
 // @tags auth
-// @Description Обработка запроса на регистрацию пользователя
+// @Description Регистрация пользователя
 // @ID register
 // @Accept json
 // @Produce json
-// @Param user body models.User true "Данные о пользователе"
+// @Param user body models.User true "Данные пользователя"
 // @Router /api/v1/auth/register [post]
-// TODO - Сделать для ошибок/успеха свои структуры
 func Register(c *gin.Context) {
+	// TODO: Сделать для ошибок/успеха свои структуры
 	// Парсинг запроса
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -142,12 +142,12 @@ func Register(c *gin.Context) {
 
 // @summary Logout
 // @tags auth
-// @Description Обработка запроса выход пользователя из системы
+// @Description Выход пользователя
 // @ID logout
 // @Produce json
 // @Router /api/v1/auth/logout [post]
-// TODO - Сделать для ошибок/успеха свои структуры
 func Logout(c *gin.Context) {
+	// TODO: Сделать для ошибок/успеха свои структуры
 	// TODO: Реализовать выход
 	c.JSON(
 		http.StatusInternalServerError,
