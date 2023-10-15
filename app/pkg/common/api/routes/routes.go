@@ -10,6 +10,8 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.Default()
 
+	r.Use(middleware.CorsMiddleware())
+
 	api := r.Group("/api")
 	{
 		v1 := api.Group("/v1")
