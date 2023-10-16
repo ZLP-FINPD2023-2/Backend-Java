@@ -25,7 +25,7 @@ func GenerateToken(ID uint) (string, error) {
 // Вход
 
 // Структура запроса
-type LoginRequest struct {
+type loginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
@@ -36,12 +36,13 @@ type LoginRequest struct {
 // @ID login
 // @Accept json
 // @Produce json
-// @Param req body LoginRequest true "Данные пользователя (email и пароль)"
-// @Router /api/v1/auth/login [post]
+// @Param req body loginRequest true "Данные пользователя"
+// @Router /auth/login [post]
 func Login(c *gin.Context) {
 	// TODO: Сделать для ошибок/успеха свои структуры
+
 	// Парсинг запроса
-	var req LoginRequest
+	var req loginRequest
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
@@ -89,7 +90,7 @@ func Login(c *gin.Context) {
 // Регистрация
 
 // Структура запроса
-type RegisterRequest struct {
+type registerRequest struct {
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	FirstName  string `json:"firstname"`
@@ -105,12 +106,13 @@ type RegisterRequest struct {
 // @ID register
 // @Accept json
 // @Produce json
-// @Param user body models.User true "Данные пользователя"
-// @Router /api/v1/auth/register [post]
+// @Param user body registerRequest true "Данные пользователя"
+// @Router /auth/register [post]
 func Register(c *gin.Context) {
 	// TODO: Сделать для ошибок/успеха свои структуры
+
 	// Парсинг запроса
-	var registerRequest RegisterRequest
+	var registerRequest registerRequest
 	if err := c.ShouldBindJSON(&registerRequest); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
@@ -161,16 +163,9 @@ func Register(c *gin.Context) {
 }
 
 // Выход
-
-// @summary Logout
-// @tags auth
-// @Description Выход пользователя
-// @ID logout
-// @Produce json
-// @Router /api/v1/auth/logout [post]
 func Logout(c *gin.Context) {
-	// TODO: Сделать для ошибок/успеха свои структуры
 	// TODO: Реализовать выход
+	// TODO: Сделать для ошибок/успеха свои структуры
 	c.JSON(
 		http.StatusInternalServerError,
 		gin.H{"error": "Not realized"},

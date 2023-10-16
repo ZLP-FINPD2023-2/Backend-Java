@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/auth/login": {
+        "/auth/login": {
             "post": {
                 "description": "Вход пользователя",
                 "consumes": [
@@ -31,33 +31,19 @@ const docTemplate = `{
                 "operationId": "login",
                 "parameters": [
                     {
-                        "description": "Данные пользователя (email и пароль)",
+                        "description": "Данные пользователя",
                         "name": "req",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.LoginRequest"
+                            "$ref": "#/definitions/handlers.loginRequest"
                         }
                     }
                 ],
                 "responses": {}
             }
         },
-        "/api/v1/auth/logout": {
-            "post": {
-                "description": "Выход пользователя",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Logout",
-                "operationId": "logout",
-                "responses": {}
-            }
-        },
-        "/api/v1/auth/register": {
+        "/auth/register": {
             "post": {
                 "description": "Регистрация пользователя",
                 "consumes": [
@@ -78,7 +64,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/handlers.registerRequest"
                         }
                     }
                 ],
@@ -87,7 +73,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.LoginRequest": {
+        "handlers.loginRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -98,8 +84,31 @@ const docTemplate = `{
                 }
             }
         },
-        "models.User": {
-            "type": "object"
+        "handlers.registerRequest": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "boolean"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "patronymic": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {

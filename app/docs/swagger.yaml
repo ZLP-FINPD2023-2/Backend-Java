@@ -1,13 +1,28 @@
 basePath: /api/v1/
 definitions:
-  handlers.LoginRequest:
+  handlers.loginRequest:
     properties:
       email:
         type: string
       password:
         type: string
     type: object
-  models.User:
+  handlers.registerRequest:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      firstname:
+        type: string
+      gender:
+        type: boolean
+      lastname:
+        type: string
+      password:
+        type: string
+      patronymic:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -15,36 +30,26 @@ info:
   title: Finapp API
   version: "1.0"
 paths:
-  /api/v1/auth/login:
+  /auth/login:
     post:
       consumes:
       - application/json
       description: Вход пользователя
       operationId: login
       parameters:
-      - description: Данные пользователя (email и пароль)
+      - description: Данные пользователя
         in: body
         name: req
         required: true
         schema:
-          $ref: '#/definitions/handlers.LoginRequest'
+          $ref: '#/definitions/handlers.loginRequest'
       produces:
       - application/json
       responses: {}
       summary: Login
       tags:
       - auth
-  /api/v1/auth/logout:
-    post:
-      description: Выход пользователя
-      operationId: logout
-      produces:
-      - application/json
-      responses: {}
-      summary: Logout
-      tags:
-      - auth
-  /api/v1/auth/register:
+  /auth/register:
     post:
       consumes:
       - application/json
@@ -56,7 +61,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/handlers.registerRequest'
       produces:
       - application/json
       responses: {}
