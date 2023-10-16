@@ -1,0 +1,76 @@
+basePath: /api/v1/
+definitions:
+  handlers.loginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  handlers.registerRequest:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      firstname:
+        type: string
+      gender:
+        type: boolean
+      lastname:
+        type: string
+      password:
+        type: string
+      patronymic:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: Finapp API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Вход пользователя
+      operationId: login
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.loginRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Login
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация пользователя
+      operationId: register
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.registerRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Register
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

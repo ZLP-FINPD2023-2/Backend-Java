@@ -25,15 +25,24 @@ func GenerateToken(ID uint) (string, error) {
 // Вход
 
 // Структура запроса
-type LoginRequest struct {
+type loginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-// Хендлер
+// @summary Login
+// @tags auth
+// @Description Вход пользователя
+// @ID login
+// @Accept json
+// @Produce json
+// @Param req body loginRequest true "Данные пользователя"
+// @Router /auth/login [post]
 func Login(c *gin.Context) {
+	// TODO: Сделать для ошибок/успеха свои структуры
+
 	// Парсинг запроса
-	var req LoginRequest
+	var req loginRequest
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
@@ -80,11 +89,31 @@ func Login(c *gin.Context) {
 
 // Регистрация
 
-// Хендлер
+// Структура запроса
+type registerRequest struct {
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	FirstName  string `json:"firstname"`
+	LastName   string `json:"lastname"`
+	Patronymic string `json:"patronymic,omitempty"`
+	Age        uint8  `json:"age"`
+	Gender     bool   `json:"gender"`
+}
+
+// @summary Register
+// @tags auth
+// @Description Регистрация пользователя
+// @ID register
+// @Accept json
+// @Produce json
+// @Param user body registerRequest true "Данные пользователя"
+// @Router /auth/register [post]
 func Register(c *gin.Context) {
+	// TODO: Сделать для ошибок/успеха свои структуры
+
 	// Парсинг запроса
-	var user models.User
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var registerRequest registerRequest
+	if err := c.ShouldBindJSON(&registerRequest); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
 			gin.H{
@@ -95,7 +124,7 @@ func Register(c *gin.Context) {
 	}
 
 	// Хэширование пароля
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(registerRequest.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -103,9 +132,18 @@ func Register(c *gin.Context) {
 		)
 		return
 	}
-	user.Password = string(hashedPassword)
+	registerRequest.Password = string(hashedPassword)
 
 	// Сохранение пользователя в БД
+	user := models.User{
+		Email:      registerRequest.Email,
+		Password:   registerRequest.Password,
+		FirstName:  registerRequest.FirstName,
+		LastName:   registerRequest.LastName,
+		Patronymic: registerRequest.Patronymic,
+		Age:        registerRequest.Age,
+		Gender:     registerRequest.Gender,
+	}
 	// TODO: улучшить обработку ошибок
 	if err := db.DB.Create(&user).Error; err != nil {
 		c.JSON(
@@ -125,10 +163,9 @@ func Register(c *gin.Context) {
 }
 
 // Выход
-
-// Хендлер
 func Logout(c *gin.Context) {
 	// TODO: Реализовать выход
+	// TODO: Сделать для ошибок/успеха свои структуры
 	c.JSON(
 		http.StatusInternalServerError,
 		gin.H{"error": "Not realized"},
