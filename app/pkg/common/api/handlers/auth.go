@@ -88,6 +88,17 @@ func Login(c *gin.Context) {
 
 // Регистрация
 
+// Структура запроса
+type RegisterRequest struct {
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	FirstName  string `json:"firstname"`
+	LastName   string `json:"lastname"`
+	Patronymic string `json:"patronymic,omitempty"`
+	Age        uint8  `json:"age"`
+	Gender     bool   `json:"gender"`
+}
+
 // @summary Register
 // @tags auth
 // @Description Регистрация пользователя
@@ -99,8 +110,8 @@ func Login(c *gin.Context) {
 func Register(c *gin.Context) {
 	// TODO: Сделать для ошибок/успеха свои структуры
 	// Парсинг запроса
-	var user models.User
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var registerRequest RegisterRequest
+	if err := c.ShouldBindJSON(&registerRequest); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
 			gin.H{
@@ -111,7 +122,7 @@ func Register(c *gin.Context) {
 	}
 
 	// Хэширование пароля
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(registerRequest.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -119,9 +130,18 @@ func Register(c *gin.Context) {
 		)
 		return
 	}
-	user.Password = string(hashedPassword)
+	registerRequest.Password = string(hashedPassword)
 
 	// Сохранение пользователя в БД
+	user := models.User{
+		Email:      registerRequest.Email,
+		Password:   registerRequest.Password,
+		FirstName:  registerRequest.FirstName,
+		LastName:   registerRequest.LastName,
+		Patronymic: registerRequest.Patronymic,
+		Age:        registerRequest.Age,
+		Gender:     registerRequest.Gender,
+	}
 	// TODO: улучшить обработку ошибок
 	if err := db.DB.Create(&user).Error; err != nil {
 		c.JSON(
