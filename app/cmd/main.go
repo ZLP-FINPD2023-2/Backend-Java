@@ -11,7 +11,7 @@ import (
 // @title Finapp API
 // @version 1.0
 
-// @host localhost:8080
+// @host zlp-lfp.ru
 // @BasePath /api/v1/
 
 // @securityDefinitions.apikey ApiKeyAuth

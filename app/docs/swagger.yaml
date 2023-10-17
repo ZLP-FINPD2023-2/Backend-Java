@@ -24,7 +24,7 @@ definitions:
       patronymic:
         type: string
     type: object
-host: localhost:8080
+host: zlp-lfp.ru
 info:
   contact: {}
   title: Finapp API

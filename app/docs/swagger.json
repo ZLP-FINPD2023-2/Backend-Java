@@ -5,7 +5,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "zlp-lfp.ru",
     "basePath": "/api/v1/",
     "paths": {
         "/auth/login": {
