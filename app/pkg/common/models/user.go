@@ -6,6 +6,7 @@ import (
 )
 
 // TODO: реализовать gender с помощью enum
+// TODO: реализовать BirthDate вместо Age
 type User struct {
 	gorm.Model
 	Email      string `json:"email" gorm:"unique" validate:"required,email"`
