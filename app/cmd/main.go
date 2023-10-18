@@ -6,12 +6,12 @@ import (
 	"app/pkg/common/api/routes"
 	"app/pkg/common/config"
 	"app/pkg/common/db"
+	"app/docs"
 )
 
 // @title Finapp API
 // @version 1.0
 
-// @host zlp-lfp.ru
 // @BasePath /api/v1/
 
 // @securityDefinitions.apikey ApiKeyAuth
@@ -27,6 +27,8 @@ func main() {
 	}
 
 	r := routes.InitRouter()
+
+	docs.SwaggerInfo.Host = config.Cfg.Swagger.Host;
 
 	r.Run(config.Cfg.Port)
 }

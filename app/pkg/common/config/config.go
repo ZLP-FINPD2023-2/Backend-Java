@@ -19,11 +19,16 @@ type CorsConfig struct {
 	AllowedHeaders string `mapstructure:"ALLOWED_HEADERS"`
 }
 
+type SwagConfig struct {
+	Host string `mapstructure:"SWAGGER_HOST"`
+}
+
 type Config struct {
 	Port      string `mapstructure:"PORT"`
 	SecretKey string `mapstructure:"SECRET_KEY"`
 	DB        DBConfig
 	Cors      CorsConfig
+	Swagger   SwagConfig
 }
 
 var Cfg Config
@@ -43,6 +48,8 @@ func InitConfig() error {
 	viper.SetDefault("ALLOWED_METHODS", "GET HEAD POST PUT DELETE OPTIONS PATCH")
 	viper.SetDefault("ALLOWED_HEADERS", "Content-Type Authorization Accept Cache-Control Allow")
 
+	viper.SetDefault("SWAGGER_HOST", "localhost")
+
 	viper.AutomaticEnv()
 
 	if err := viper.Unmarshal(&Cfg); err != nil {
@@ -54,6 +61,10 @@ func InitConfig() error {
 	}
 
 	if err := viper.Unmarshal(&Cfg.Cors); err != nil {
+		return err
+	}
+
+	if err := viper.Unmarshal(&Cfg.Swagger); err != nil {
 		return err
 	}
 
