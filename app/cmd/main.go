@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"app/docs"
 	"app/pkg/common/api/routes"
 	"app/pkg/common/config"
 	"app/pkg/common/db"
@@ -11,7 +12,6 @@ import (
 // @title Finapp API
 // @version 1.0
 
-// @host localhost:8080
 // @BasePath /api/v1/
 
 // @securityDefinitions.apikey ApiKeyAuth
@@ -27,6 +27,8 @@ func main() {
 	}
 
 	r := routes.InitRouter()
+
+	docs.SwaggerInfo.Host = config.Cfg.Swagger.Host
 
 	r.Run(config.Cfg.Port)
 }
