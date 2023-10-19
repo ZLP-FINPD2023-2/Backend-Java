@@ -48,7 +48,7 @@ func InitConfig() error {
 	viper.SetDefault("ALLOWED_METHODS", "GET HEAD POST PUT DELETE OPTIONS PATCH")
 	viper.SetDefault("ALLOWED_HEADERS", "Content-Type Authorization Accept Cache-Control Allow")
 
-	viper.SetDefault("SWAGGER_HOST", "localhost")
+	viper.SetDefault("SWAGGER_HOST", "localhost:8080")
 
 	viper.AutomaticEnv()
 
