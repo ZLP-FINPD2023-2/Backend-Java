@@ -24,7 +24,6 @@ definitions:
       patronymic:
         type: string
     type: object
-host: zlp-lfp.ru
 info:
   contact: {}
   title: Finapp API
