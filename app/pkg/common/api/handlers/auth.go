@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -46,7 +47,7 @@ func Login(c *gin.Context) {
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
-			gin.H{"error": "Invalid request body"},
+			gin.H{"error": err.Error()},
 		)
 		return
 	}
@@ -144,17 +145,24 @@ func Register(c *gin.Context) {
 		Age:        registerRequest.Age,
 		Gender:     registerRequest.Gender,
 	}
-	// TODO: улучшить обработку ошибок
+
 	if err := db.DB.Create(&user).Error; err != nil {
+		errorMap := make(map[string]string)
+		lines := strings.Split(err.Error(), "\n")
+		for _, line := range lines {
+			parts := strings.Split(line, "Error:")
+			if len(parts) == 2 {
+				key := strings.TrimSpace(strings.Trim(parts[0], "Key:'"))
+				errorDescription := strings.TrimSpace(parts[1])
+				errorMap[key] = errorDescription
+			}
+		}
 		c.JSON(
-			http.StatusInternalServerError,
-			gin.H{
-				"error": "Failed to safe user",
-			},
+			http.StatusBadRequest,
+			errorMap,
 		)
 		return
 	}
-
 	// Отправка ответа
 	c.JSON(
 		http.StatusOK,
