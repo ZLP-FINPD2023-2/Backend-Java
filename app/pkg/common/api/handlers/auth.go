@@ -91,13 +91,13 @@ func Login(c *gin.Context) {
 
 // Структура запроса
 type registerRequest struct {
-	Email      string `json:"email"`
-	Password   string `json:"password"`
-	FirstName  string `json:"firstname"`
-	LastName   string `json:"lastname"`
-	Patronymic string `json:"patronymic,omitempty"`
-	Age        uint8  `json:"age"`
-	Gender     bool   `json:"gender"`
+	Email      string    `json:"email"`
+	Password   string    `json:"password"`
+	FirstName  string    `json:"firstname"`
+	LastName   string    `json:"lastname"`
+	Patronymic string    `json:"patronymic,omitempty"`
+	BirthDate  time.Time `json:"birthdate"`
+	Gender     Gender    `json:"gender"`
 }
 
 // @summary Register
@@ -141,7 +141,7 @@ func Register(c *gin.Context) {
 		FirstName:  registerRequest.FirstName,
 		LastName:   registerRequest.LastName,
 		Patronymic: registerRequest.Patronymic,
-		Age:        registerRequest.Age,
+		BirthDate:  registerRequest.BirthDate,
 		Gender:     registerRequest.Gender,
 	}
 	// TODO: улучшить обработку ошибок
