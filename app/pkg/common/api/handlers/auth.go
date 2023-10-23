@@ -91,13 +91,13 @@ func Login(c *gin.Context) {
 
 // Структура запроса
 type registerRequest struct {
-	Email      string    `json:"email"`
-	Password   string    `json:"password"`
-	FirstName  string    `json:"firstname"`
-	LastName   string    `json:"lastname"`
-	Patronymic string    `json:"patronymic,omitempty"`
-	BirthDate  time.Time `json:"birthdate"`
-	Gender     Gender    `json:"gender"`
+	Email      string         `json:"email"`
+	Password   string         `json:"password"`
+	FirstName  string         `json:"firstname"`
+	LastName   string         `json:"lastname"`
+	Patronymic string         `json:"patronymic,omitempty"`
+	BirthDate  time.Time      `json:"birthdate"`
+	Gender     models.Gender  `json:"gender"`
 }
 
 // @summary Register
