@@ -15,7 +15,7 @@ COPY . ./
 RUN go build -v -o /usr/local/bin/app ./cmd/main.go
 
 # Копирование entrypoint.sh
-COPY entrypoint.sh /usr/local/bin
+COPY docker/entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Запуск

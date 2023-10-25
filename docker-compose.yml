@@ -5,7 +5,7 @@ services:
   web:
     build:
       context: ./app
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile
     ports:
       - 8080:8080
     env_file:
