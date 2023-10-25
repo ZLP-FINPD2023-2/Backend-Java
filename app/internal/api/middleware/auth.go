@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"app/pkg/common/config"
+	"app/internal/config"
 	"net/http"
 	"strings"
 

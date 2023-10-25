@@ -6,8 +6,8 @@ import (
 	"github.com/swaggo/gin-swagger"
 
 	_ "app/docs"
-	"app/pkg/common/api/handlers"
-	"app/pkg/common/api/middleware"
+	"app/internal/api/handlers"
+	"app/internal/api/middleware"
 )
 
 func InitRouter() *gin.Engine {

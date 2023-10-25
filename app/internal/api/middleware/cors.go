@@ -4,7 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	"app/pkg/common/config"
+	"app/internal/config"
 )
 
 func CorsMiddleware() gin.HandlerFunc {

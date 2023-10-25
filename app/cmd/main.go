@@ -4,9 +4,9 @@ import (
 	"log"
 
 	"app/docs"
-	"app/pkg/common/api/routes"
-	"app/pkg/common/config"
-	"app/pkg/common/db"
+	"app/internal/api/routes"
+	"app/internal/config"
+	"app/internal/db"
 )
 
 // @title Finapp API

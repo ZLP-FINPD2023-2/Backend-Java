@@ -8,8 +8,8 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
-	"app/pkg/common/config"
-	"app/pkg/common/models"
+	"app/internal/config"
+	"app/internal/models"
 )
 
 var DB *gorm.DB
