@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -14,11 +13,11 @@ import (
 )
 
 // Генерация токена
-func GenerateToken(ID uint) (string, error) {
+func generateToken(ID uint) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["ID"] = ID
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	//claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	return token.SignedString([]byte(config.Cfg.SecretKey))
 }
 
@@ -71,7 +70,7 @@ func Login(c *gin.Context) {
 	}
 
 	// Генерация JWT токена
-	token, err := GenerateToken(user.ID)
+	token, err := generateToken(user.ID)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -159,15 +158,5 @@ func Register(c *gin.Context) {
 	c.JSON(
 		http.StatusOK,
 		gin.H{"message": "User registered successfully"},
-	)
-}
-
-// Выход
-func Logout(c *gin.Context) {
-	// TODO: Реализовать выход
-	// TODO: Сделать для ошибок/успеха свои структуры
-	c.JSON(
-		http.StatusInternalServerError,
-		gin.H{"error": "Not realized"},
 	)
 }
