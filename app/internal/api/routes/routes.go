@@ -6,7 +6,7 @@ import (
 	"github.com/swaggo/gin-swagger"
 
 	_ "app/docs"
-	"app/internal/api/handlers"
+	"app/internal/api/controllers"
 	"app/internal/api/middleware"
 )
 
@@ -22,11 +22,11 @@ func InitRouter() *gin.Engine {
 			v1.GET("/schemes/swagger-ui/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 			auth := v1.Group("/auth")
 			{
-				auth.POST("/login", handlers.Login)
-				auth.POST("/register", handlers.Register)
+				auth.POST("/login", controllers.Login)
+				auth.POST("/register", controllers.Register)
 
 				auth.Use(middleware.AuthMiddleware())
-				auth.POST("/logout", handlers.Logout)
+				auth.POST("/logout", controllers.Logout)
 			}
 		}
 	}
