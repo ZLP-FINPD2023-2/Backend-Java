@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
@@ -38,33 +40,37 @@ type loginRequest struct {
 // @Param req body loginRequest true "Данные пользователя"
 // @Router /auth/login [post]
 func Login(c *gin.Context) {
-	// TODO: Сделать для ошибок/успеха свои структуры
-
 	// Парсинг запроса
-	var req loginRequest
-	if err := c.BindJSON(&req); err != nil {
+	var q loginRequest
+	if err := c.BindJSON(&q); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
-			gin.H{"error": "Invalid request body"},
+			models.ErrorResponse{
+				Error: "Invalid request body",
+			},
 		)
 		return
 	}
 
 	// Поиск пользователя
 	var user models.User
-	if err := db.DB.Where("email = ?", req.Email).First(&user).Error; err != nil {
+	if err := db.DB.Where("email = ?", q.Email).First(&user).Error; err != nil {
 		c.JSON(
 			http.StatusUnauthorized,
-			gin.H{"error": "Invalid email or password"},
+			models.ErrorResponse{
+				Error: "Invalid email or password",
+			},
 		)
 		return
 	}
 
 	// Сравнение хэша и пароля
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(q.Password)); err != nil {
 		c.JSON(
 			http.StatusUnauthorized,
-			gin.H{"error": "Invalid email or password"},
+			models.ErrorResponse{
+				Error: "Invalid email or password",
+			},
 		)
 		return
 	}
@@ -74,7 +80,9 @@ func Login(c *gin.Context) {
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
-			gin.H{"error": "Failed to generate token"},
+			models.ErrorResponse{
+				Error: "Failed to generate token",
+			},
 		)
 		return
 	}
@@ -108,47 +116,57 @@ type registerRequest struct {
 // @Param user body registerRequest true "Данные пользователя"
 // @Router /auth/register [post]
 func Register(c *gin.Context) {
-	// TODO: Сделать для ошибок/успеха свои структуры
-
 	// Парсинг запроса
-	var registerRequest registerRequest
-	if err := c.ShouldBindJSON(&registerRequest); err != nil {
+	var q registerRequest
+	if err := c.BindJSON(&q); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
-			gin.H{
-				"error": "Invalid request body",
+			models.ErrorResponse{
+				Error: "Invalid request body",
 			},
 		)
 		return
 	}
 
 	// Хэширование пароля
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(registerRequest.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(q.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
-			gin.H{"error": "Failed to hash password"},
+			models.ErrorResponse{
+				Error: "Failed to hash password",
+			},
 		)
 		return
 	}
-	registerRequest.Password = string(hashedPassword)
+	q.Password = string(hashedPassword)
 
 	// Сохранение пользователя в БД
 	user := models.User{
-		Email:      registerRequest.Email,
-		Password:   registerRequest.Password,
-		FirstName:  registerRequest.FirstName,
-		LastName:   registerRequest.LastName,
-		Patronymic: registerRequest.Patronymic,
-		Age:        registerRequest.Age,
-		Gender:     registerRequest.Gender,
+		Email:      q.Email,
+		Password:   q.Password,
+		FirstName:  q.FirstName,
+		LastName:   q.LastName,
+		Patronymic: q.Patronymic,
+		Age:        q.Age,
+		Gender:     q.Gender,
 	}
-	// TODO: улучшить обработку ошибок
+
 	if err := db.DB.Create(&user).Error; err != nil {
+		var verr validator.ValidationErrors
+		if errors.As(err, &verr) {
+			c.JSON(
+				http.StatusBadRequest,
+				gin.H{
+					"error": err,
+				},
+			)
+			return
+		}
 		c.JSON(
 			http.StatusInternalServerError,
-			gin.H{
-				"error": "Failed to safe user",
+			models.ErrorResponse{
+				Error: "Validation failed",
 			},
 		)
 		return
@@ -157,6 +175,8 @@ func Register(c *gin.Context) {
 	// Отправка ответа
 	c.JSON(
 		http.StatusOK,
-		gin.H{"message": "User registered successfully"},
+		models.SuccessResponse{
+			Message: "User registered successfully",
+		},
 	)
 }

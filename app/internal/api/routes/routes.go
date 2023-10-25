@@ -26,7 +26,6 @@ func InitRouter() *gin.Engine {
 				auth.POST("/register", controllers.Register)
 
 				auth.Use(middleware.AuthMiddleware())
-				auth.POST("/logout", controllers.Logout)
 			}
 		}
 	}
