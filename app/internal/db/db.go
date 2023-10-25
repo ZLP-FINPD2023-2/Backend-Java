@@ -15,15 +15,15 @@ import (
 var DB *gorm.DB
 
 func Init() error {
-	dbCfg := config.Cfg.DB
+	cfg := config.Cfg
 	dsn := fmt.Sprintf(
 		"user=%s password=%s dbname=%s host=%s port=%s sslmode=%s",
-		dbCfg.User,
-		dbCfg.Password,
-		dbCfg.Name,
-		dbCfg.Host,
-		dbCfg.Port,
-		dbCfg.SSLMode,
+		cfg.DBUser,
+		cfg.DBPassword,
+		cfg.DBName,
+		cfg.DBHost,
+		cfg.DBPort,
+		cfg.DBSSLMode,
 	)
 
 	var err error

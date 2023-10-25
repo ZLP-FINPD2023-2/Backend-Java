@@ -28,7 +28,7 @@ func main() {
 
 	r := routes.InitRouter()
 
-	docs.SwaggerInfo.Host = config.Cfg.Swagger.Host
+	docs.SwaggerInfo.Host = config.Cfg.Host
 
 	r.Run(config.Cfg.Port)
 }

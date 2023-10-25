@@ -8,12 +8,12 @@ import (
 )
 
 func CorsMiddleware() gin.HandlerFunc {
-	corsCfg := config.Cfg.Cors
+	cfg := config.Cfg
 	CorsConfig := cors.DefaultConfig()
 
-	CorsConfig.AllowOrigins = []string{corsCfg.AllowedOrigins}
-	CorsConfig.AllowMethods = []string{corsCfg.AllowedMethods}
-	CorsConfig.AllowHeaders = []string{corsCfg.AllowedHeaders}
+	CorsConfig.AllowOrigins = []string{cfg.CORSAllowedOrigins}
+	CorsConfig.AllowMethods = []string{cfg.CORSAllowedMethods}
+	CorsConfig.AllowHeaders = []string{cfg.CORSAllowedHeaders}
 
 	return cors.New(CorsConfig)
 }
