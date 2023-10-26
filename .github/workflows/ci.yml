@@ -19,6 +19,8 @@ jobs:
       - name: Build
         run: |
           cd ./app
+          go install github.com/swaggo/swag/cmd/swag@latest
+          swag init -g server.go
           go build -v ./...
 
       - name: Test

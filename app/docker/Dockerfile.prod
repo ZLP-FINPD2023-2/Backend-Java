@@ -6,13 +6,14 @@
 FROM golang as builder
 
 # Установка рабочей директории
-WORKDIR /usr/src/app
+WORKDIR /usr/src/finapp
 
 # Установка переменных окружения
 ENV CGO_ENABLED 0
 ENV GOOS linux
 
 # Установка зависимостей
+RUN go install github.com/swaggo/swag/cmd/swag@latest
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
@@ -20,7 +21,8 @@ RUN go mod download && go mod verify
 COPY . ./
 
 # Сборка
-RUN go build -v -o /usr/local/bin/app ./cmd/main.go
+RUN swag init -g server.go
+RUN go build -v -o /usr/local/bin/app ./server.go
 
 #########
 # FINAL #

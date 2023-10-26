@@ -5,6 +5,7 @@ import (
 
 	"finapp/api/middlewares"
 	"finapp/api/routes"
+	"finapp/docs"
 	"finapp/lib"
 )
 
@@ -28,6 +29,9 @@ func (s *ServeCommand) Run() lib.CommandRunner {
 	) {
 		middleware.Setup()
 		route.Setup()
+
+    // Динамический хост в доке
+		docs.SwaggerInfo.Host = env.Host
 
 		logger.Info("Running server")
 		if env.ServerPort == "" {
