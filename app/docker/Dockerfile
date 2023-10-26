@@ -2,7 +2,7 @@
 FROM golang:alpine as builder
 
 # Установка рабочей директории
-WORKDIR /usr/src/app
+WORKDIR /usr/src/finapp
 
 # Установка зависимостей
 COPY go.mod go.sum ./
@@ -12,7 +12,7 @@ RUN go mod download && go mod verify
 COPY . ./
 
 # Сборка
-RUN go build -v -o /usr/local/bin/app ./cmd/main.go
+RUN go build -v -o /usr/local/bin/finapp ./server.go
 
 # Копирование entrypoint.sh
 COPY docker/entrypoint.sh /usr/local/bin
@@ -20,4 +20,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Запуск
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["app"]
+CMD ["finapp", "app:serve"]

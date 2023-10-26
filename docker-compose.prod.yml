@@ -4,9 +4,9 @@ name: backend
 services:
   web:
     image: ghcr.io/zlp-finpd2023-2/backend:dev
-    command: ./app
+    command: ./finapp
     expose:
-      - 8080
+      - ${SERVER_PORT}
     env_file:
       - .env.prod
       - .env.prod.db

@@ -1,14 +1,17 @@
-package config
+package lib
 
 import (
+	"log"
+
 	"github.com/spf13/viper"
 )
 
-type Config struct {
+type Env struct {
 	// App
-	Host      string `mapstructure:"HOST"`
-	Port      string `mapstructure:"PORT"`
-	SecretKey string `mapstructure:"SECRET_KEY"`
+	Host        string `mapstructure:"HOST"`
+	ServerPort  string `mapstructure:"SERVER_PORT"`
+	SecretKey   string `mapstructure:"SECRET_KEY"`
+	Environment string `mapstructure:"GIN_MODE"`
 	// DB
 	DBUser     string `mapstructure:"POSTGRES_USER"`
 	DBPassword string `mapstructure:"POSTGRES_PASSWORD"`
@@ -20,14 +23,16 @@ type Config struct {
 	CORSAllowedOrigins string `mapstructure:"ALLOWED_ORIGINS"`
 	CORSAllowedMethods string `mapstructure:"ALLOWED_METHODS"`
 	CORSAllowedHeaders string `mapstructure:"ALLOWED_HEADERS"`
+	// Logs
+	LogOutput string `mapstructure:"LOG_OUTPUT"`
+	LogLevel  string `mapstructure:"LOG_LEVEL"`
 }
 
-var Cfg Config
-
-func InitConfig() error {
+func NewEnv() Env {
+	env := Env{}
 	// App
 	viper.SetDefault("HOST", "localhost:8080")
-	viper.SetDefault("PORT", ":8080")
+	viper.SetDefault("SERVER_PORT", "8080")
 	viper.SetDefault("SECRET_KEY", "secret_key")
 	// DB
 	viper.SetDefault("POSTGRES_USER", "admin")
@@ -40,12 +45,15 @@ func InitConfig() error {
 	viper.SetDefault("ALLOWED_ORIGINS", "*")
 	viper.SetDefault("ALLOWED_METHODS", "GET HEAD POST PUT DELETE OPTIONS PATCH")
 	viper.SetDefault("ALLOWED_HEADERS", "Content-Type Authorization Accept Cache-Control Allow")
+	// Logs
+	viper.SetDefault("LOG_OUTPUT", "logs")
+	viper.SetDefault("LOG_LEVEL", "debug")
 
 	viper.AutomaticEnv()
 
-	if err := viper.Unmarshal(&Cfg); err != nil {
-		return err
+	if err := viper.Unmarshal(&env); err != nil {
+		log.Fatal("Env can't be loaded: ", err.Error())
 	}
 
-	return nil
+	return env
 }

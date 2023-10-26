@@ -1,4 +1,4 @@
-package models
+package lib
 
 import (
 	"fmt"
@@ -6,9 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type ValidationErrors []validator.FieldError
-
-func Simple(verr validator.ValidationErrors) map[string]string {
+func ParseValidationErrors(verr validator.ValidationErrors) map[string]string {
 	errs := make(map[string]string)
 
 	for _, f := range verr {
