@@ -4,7 +4,7 @@ name: backend
 services:
   web:
     image: ghcr.io/zlp-finpd2023-2/backend:dev
-    command: ./app
+    command: ./app app:serve
     expose:
       - ${SERVER_PORT}
     env_file:
