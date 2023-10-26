@@ -30,7 +30,7 @@ func (s *ServeCommand) Run() lib.CommandRunner {
 		middleware.Setup()
 		route.Setup()
 
-    // Динамический хост в доке
+		// Динамический хост в доке
 		docs.SwaggerInfo.Host = env.Host
 
 		logger.Info("Running server")
