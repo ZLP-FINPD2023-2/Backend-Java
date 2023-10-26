@@ -1,3 +1,5 @@
 data
-sqlite.db
+test.db
 .idea
+migrations/sqlite
+docs
