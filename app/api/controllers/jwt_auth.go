@@ -118,7 +118,9 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 		// TODO: Придумать обработчик получше
 		if strings.Contains(err.Error(), "UNIQUE") || strings.Contains(err.Error(), "duplicate") {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "User with this email already exists",
+				"error": gin.H{
+					"Email": "duplicate",
+				},
 			})
 			return
 		}
