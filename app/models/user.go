@@ -3,6 +3,14 @@ package models
 import (
 	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
+	"time"
+)
+
+type Gender int8
+
+const (
+	Female Gender = iota
+	Male
 )
 
 type User struct {
@@ -12,6 +20,8 @@ type User struct {
 	FirstName  string  `validate:"required"`
 	LastName   string  `validate:"required"`
 	Patronymic string
+	Gender     Gender    `validate:"required"`
+	BirthDate  time.Time `validate:"required"`
 }
 
 // TableName gives table name of model

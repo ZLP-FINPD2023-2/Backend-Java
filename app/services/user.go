@@ -44,6 +44,8 @@ func (s UserService) Register(q *models.RegisterRequest) error {
 		FirstName:  q.FirstName,
 		LastName:   q.LastName,
 		Patronymic: q.Patronymic,
+		Gender:     q.Gender,
+		BirthDate:  q.BirthDate,
 	}
 
 	return s.repository.Create(&user).Error

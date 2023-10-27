@@ -2,11 +2,10 @@ package controllers
 
 import (
 	"errors"
-	"net/http"
-	"strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"net/http"
+	"strings"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -47,10 +46,9 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 	// Парсинг запроса
 	var q models.LoginRequest
 	if err := c.ShouldBindJSON(&q); err != nil {
-		c.JSON(
-			http.StatusBadRequest, gin.H{
-				"error": "Invalid request body",
-			})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request body",
+		})
 		return
 	}
 
@@ -105,17 +103,16 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 		// Ошибки валидации
 		var vErr validator.ValidationErrors
 		if errors.As(err, &vErr) {
-			c.JSON(
-				http.StatusBadRequest,
-				gin.H{
-					"error": lib.ParseValidationErrors(vErr),
-				},
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": lib.ParseValidationErrors(vErr),
+			},
 			)
 			return
 		}
 
 		// Ошибка уникального значения
 		// TODO: Придумать обработчик получше
+		// Реально надо получше, а то это кринж
 		if strings.Contains(err.Error(), "UNIQUE") || strings.Contains(err.Error(), "duplicate") {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": gin.H{
