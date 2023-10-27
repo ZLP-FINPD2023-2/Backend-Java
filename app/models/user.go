@@ -6,11 +6,11 @@ import (
 	"time"
 )
 
-type Gender int8
+type Gender string
 
 const (
-	Female Gender = iota
-	Male
+	Female Gender = "Female"
+	Male   Gender = "Male"
 )
 
 type User struct {
@@ -21,7 +21,7 @@ type User struct {
 	LastName   string  `validate:"required"`
 	Patronymic string
 	Gender     Gender    `validate:"required"`
-	BirthDate  time.Time `validate:"required"`
+	Birthday   time.Time `validate:"required"`
 }
 
 // TableName gives table name of model

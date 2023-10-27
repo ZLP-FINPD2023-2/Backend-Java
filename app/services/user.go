@@ -2,6 +2,7 @@ package services
 
 import (
 	"gorm.io/gorm"
+	"time"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -38,6 +39,10 @@ func (s UserService) Authorize(q *models.LoginRequest) (models.User, error) {
 
 // Register call to register the user
 func (s UserService) Register(q *models.RegisterRequest) error {
+	birthday, err := time.Parse(models.DateFormat, q.Birthday)
+	if err != nil {
+		return err
+	}
 	user := models.User{
 		Email:      q.Email,
 		Password:   q.Password,
@@ -45,7 +50,7 @@ func (s UserService) Register(q *models.RegisterRequest) error {
 		LastName:   q.LastName,
 		Patronymic: q.Patronymic,
 		Gender:     q.Gender,
-		BirthDate:  q.BirthDate,
+		Birthday:   birthday,
 	}
 
 	return s.repository.Create(&user).Error
