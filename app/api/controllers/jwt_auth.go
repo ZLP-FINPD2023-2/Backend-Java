@@ -94,7 +94,9 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 	// Проверка пароль на короткость
 	if utf8.RuneCountInString(q.Password) < 8 {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Password length is less than minimum",
+			"error": gin.H{
+				"Password": "length",
+			},
 		})
 		return
 	}
