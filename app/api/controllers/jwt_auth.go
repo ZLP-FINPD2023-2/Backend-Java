@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -86,6 +87,14 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 	if err := c.ShouldBindJSON(&q); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid request body",
+		})
+		return
+	}
+
+	// Проверка пароль на короткость
+	if utf8.RuneCountInString(q.Password) < 8 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Password length is less than minimum",
 		})
 		return
 	}
