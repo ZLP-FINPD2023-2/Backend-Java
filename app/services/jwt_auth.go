@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/dgrijalva/jwt-go"
-	"golang.org/x/crypto/bcrypt"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -57,9 +56,4 @@ func (s JWTAuthService) CreateToken(user models.User) string {
 	}
 
 	return tokenString
-}
-
-func (s JWTAuthService) HashPassword(password string) ([]byte, error) {
-	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return hashPassword, err
 }
