@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net/http"
 	"strings"
-	"unicode/utf8"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -90,26 +89,6 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 		})
 		return
 	}
-
-	// Проверка пароль на короткость
-	if utf8.RuneCountInString(q.Password) < 8 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": gin.H{
-				"Password": "length",
-			},
-		})
-		return
-	}
-
-	// Хэширование пароля
-	hashedPassword, err := jwt.service.HashPassword(q.Password)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to hash password",
-		})
-		return
-	}
-	q.Password = string(hashedPassword)
 
 	// Регистрация пользователя
 	if err := jwt.userService.Register(&q); err != nil {
