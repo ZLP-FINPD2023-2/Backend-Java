@@ -4,6 +4,14 @@ import (
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"time"
+)
+
+type Gender string
+
+const (
+	Female Gender = "Female"
+	Male   Gender = "Male"
 )
 
 type User struct {
@@ -13,6 +21,8 @@ type User struct {
 	FirstName  string  `validate:"required"`
 	LastName   string  `validate:"required"`
 	Patronymic string
+	Gender     Gender    `validate:"oneof=Male Female"`
+	Birthday   time.Time `validate:"required"`
 }
 
 // TableName gives table name of model
