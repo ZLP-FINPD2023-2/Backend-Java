@@ -90,16 +90,6 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 		return
 	}
 
-	// Хэширование пароля
-	hashedPassword, err := jwt.service.HashPassword(q.Password)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to hash password",
-		})
-		return
-	}
-	q.Password = string(hashedPassword)
-
 	// Регистрация пользователя
 	if err := jwt.userService.Register(&q); err != nil {
 		// Ошибки валидации
