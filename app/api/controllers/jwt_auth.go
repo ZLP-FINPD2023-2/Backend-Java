@@ -88,16 +88,6 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 		return
 	}
 
-	// Проверка валидности пола
-	if !(q.Gender == models.Male || q.Gender == models.Female) {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": gin.H{
-				"Gender": "Invalid gender",
-			},
-		})
-		return
-	}
-
 	// Хэширование пароля
 	hashedPassword, err := jwt.service.HashPassword(q.Password)
 	if err != nil {
@@ -139,6 +129,7 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 					"birthday": "parse failed",
 				},
 			})
+			return
 		}
 
 		// Необработанные ошибки

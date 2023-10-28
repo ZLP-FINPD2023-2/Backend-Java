@@ -20,7 +20,7 @@ type User struct {
 	FirstName  string  `validate:"required"`
 	LastName   string  `validate:"required"`
 	Patronymic string
-	Gender     Gender    `validate:"required"`
+	Gender     Gender    `validate:"oneof=Male Female"`
 	Birthday   time.Time `validate:"required"`
 }
 
