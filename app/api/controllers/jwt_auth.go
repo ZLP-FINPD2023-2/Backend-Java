@@ -2,11 +2,10 @@ package controllers
 
 import (
 	"errors"
-	"net/http"
-	"strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"net/http"
+	"strings"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -35,22 +34,21 @@ func NewJWTAuthController(
 
 // Вход
 
-// @summary Login
-// @tags auth
-// @Description Вход пользователя
-// @ID login
-// @Accept json
-// @Produce json
-// @Param req body models.LoginRequest true "Данные пользователя"
-// @Router /auth/login [post]
+// @summary		Login
+// @tags			auth
+// @Description	Вход пользователя
+// @ID				login
+// @Accept			json
+// @Produce		json
+// @Param			req	body	models.LoginRequest	true	"Данные пользователя"
+// @Router			/auth/login [post]
 func (jwt JWTAuthController) Login(c *gin.Context) {
 	// Парсинг запроса
 	var q models.LoginRequest
 	if err := c.ShouldBindJSON(&q); err != nil {
-		c.JSON(
-			http.StatusBadRequest, gin.H{
-				"error": "Invalid request body",
-			})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request body",
+		})
 		return
 	}
 
@@ -72,14 +70,14 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 
 // Регистрация
 
-// @summary Register
-// @tags auth
-// @Description Регистрация пользователя
-// @ID register
-// @Accept json
-// @Produce json
-// @Param user body models.RegisterRequest true "Данные пользователя"
-// @Router /auth/register [post]
+// @summary		Register
+// @tags			auth
+// @Description	Регистрация пользователя
+// @ID				register
+// @Accept			json
+// @Produce		json
+// @Param			user	body	models.RegisterRequest	true	"Данные пользователя"
+// @Router			/auth/register [post]
 func (jwt JWTAuthController) Register(c *gin.Context) {
 	// Парсинг запроса
 	var q models.RegisterRequest
@@ -95,21 +93,30 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 		// Ошибки валидации
 		var vErr validator.ValidationErrors
 		if errors.As(err, &vErr) {
-			c.JSON(
-				http.StatusBadRequest,
-				gin.H{
-					"error": lib.ParseValidationErrors(vErr),
-				},
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": lib.ParseValidationErrors(vErr),
+			},
 			)
 			return
 		}
 
 		// Ошибка уникального значения
 		// TODO: Придумать обработчик получше
+		// Реально надо получше, а то это кринж
 		if strings.Contains(err.Error(), "UNIQUE") || strings.Contains(err.Error(), "duplicate") {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": gin.H{
 					"Email": "duplicate",
+				},
+			})
+			return
+		}
+
+		// Ошибка парсинга даты
+		if strings.Contains(err.Error(), "parsing time") {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": gin.H{
+					"birthday": "parse failed",
 				},
 			})
 			return
