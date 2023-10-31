@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-
 	"github.com/dgrijalva/jwt-go"
 
 	"finapp/domains"
@@ -25,21 +24,25 @@ func NewJWTAuthService(logger lib.Logger, env lib.Env) domains.AuthService {
 }
 
 // Authorize authorizes the generated token
-func (s JWTAuthService) Authorize(tokenString string) (bool, error) {
+func (s JWTAuthService) Authorize(tokenString string) (bool, int, error) {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		return []byte(s.env.SecretKey), nil
 	})
 	if token.Valid {
-		return true, nil
+		var userId int
+		if claims, ok := token.Claims.(jwt.MapClaims); ok {
+			userId = int(claims["id"].(float64)) // Предполагается, что ID сохранен в токене под ключом "id"
+		}
+		return true, userId, nil
 	} else if ve, ok := err.(*jwt.ValidationError); ok {
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-			return false, errors.New("Token malformed")
+			return false, -1, errors.New("Token malformed")
 		}
 		if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
-			return false, errors.New("Token expired")
+			return false, -1, errors.New("Token expired")
 		}
 	}
-	return false, errors.New("Couldn't handle token")
+	return false, -1, errors.New("Couldn't handle token")
 }
 
 // CreateToken creates jwt auth token

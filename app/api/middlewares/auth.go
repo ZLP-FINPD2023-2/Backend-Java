@@ -14,15 +14,18 @@ import (
 type JWTAuthMiddleware struct {
 	logger  lib.Logger
 	service domains.AuthService
+	handler lib.RequestHandler
 }
 
 // NewJWTAuthMiddleware creates new jwt auth middleware
 func NewJWTAuthMiddleware(
 	logger lib.Logger,
 	service domains.AuthService,
+	handler lib.RequestHandler,
 ) JWTAuthMiddleware {
 	return JWTAuthMiddleware{
 		logger:  logger,
+		handler: handler,
 		service: service,
 	}
 }
@@ -51,8 +54,9 @@ func (m JWTAuthMiddleware) Handler() gin.HandlerFunc {
 		}
 		if len(t) == 2 {
 			authToken := t[1]
-			authorized, err := m.service.Authorize(authToken)
-			if authorized {
+			authorized, userId, err := m.service.Authorize(authToken)
+			if authorized && userId != -1 {
+				c.Set("userId", userId)
 				c.Next()
 				return
 			}
