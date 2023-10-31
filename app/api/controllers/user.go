@@ -51,14 +51,14 @@ func (uc UserController) Delete(c *gin.Context) {
 	// Удаление пользователя
 	if err := uc.userService.Delete(uint(userId.(int))); err != nil {
 		// Необработанные ошибки
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Validation failed",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to delete user",
 		})
 		return
 	}
 
 	// Отправка ответа
-	c.JSON(http.StatusOK, gin.H{
-		"message": "no content",
+	c.JSON(http.StatusNoContent, gin.H{
+		"message": "User deleted successfully",
 	})
 }
