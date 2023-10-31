@@ -1,8 +1,9 @@
 package services
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -65,3 +66,9 @@ func (s UserService) Register(q *models.RegisterRequest) error {
 //func (s UserService) DeleteUser(id uint) error {
 //	return s.repository.Delete(&models.User{}, id).Error
 //}
+
+func (s UserService) GetUser(userID uint) (models.User, error) {
+	var user models.User
+	err := s.repository.Where("id = ?", userID).First(&user).Error
+	return user, err
+}

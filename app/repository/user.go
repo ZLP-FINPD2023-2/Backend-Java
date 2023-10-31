@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 
 	"finapp/lib"
+	"finapp/models"
 )
 
 // UserRepository database structure
@@ -28,4 +29,10 @@ func (r UserRepository) WithTrx(trxHandle *gorm.DB) UserRepository {
 	}
 	r.Database.DB = trxHandle
 	return r
+}
+
+func (r UserRepository) GetUser(userID uint) (models.User, error) {
+	var user models.User
+	err := r.Where("id = ?", userID).First(&user).Error
+	return user, err
 }
