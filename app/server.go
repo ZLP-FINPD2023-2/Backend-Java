@@ -15,6 +15,7 @@ import (
 //	@securityDefinitions.apikey	ApiKeyAuth
 //	@in							header
 //	@name						Authorization
+//	@description				Bearer
 
 func main() {
 	_ = godotenv.Load()
