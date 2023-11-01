@@ -2,10 +2,12 @@ package controllers
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"golang.org/x/crypto/bcrypt"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -34,14 +36,14 @@ func NewJWTAuthController(
 
 // Вход
 
-// @summary		Login
-// @tags			auth
-// @Description	Вход пользователя
-// @ID				login
-// @Accept			json
-// @Produce		json
-// @Param			req	body	models.LoginRequest	true	"Данные пользователя"
-// @Router			/auth/login [post]
+//	@summary		Login
+//	@tags			auth
+//	@Description	Вход пользователя
+//	@ID				login
+//	@Accept			json
+//	@Produce		json
+//	@Param			req	body	models.LoginRequest	true	"Данные пользователя"
+//	@Router			/auth/login [post]
 func (jwt JWTAuthController) Login(c *gin.Context) {
 	// Парсинг запроса
 	var q models.LoginRequest
@@ -52,8 +54,17 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 		return
 	}
 
-	// Авторизация пользователя
-	user, err := jwt.userService.Authorize(&q)
+	// Нахождение пользователя по email пользователя
+	user, err := jwt.userService.GetUserByEmail(q.Email)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid email or password",
+		})
+		return
+	}
+
+	// Сравнение хэша и пароля
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(q.Password))
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid email or password",
@@ -67,6 +78,7 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to create token",
 		})
+		return
 	}
 
 	// Отправка токена
@@ -77,14 +89,14 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 
 // Регистрация
 
-// @summary		Register
-// @tags			auth
-// @Description	Регистрация пользователя
-// @ID				register
-// @Accept			json
-// @Produce		json
-// @Param			user	body	models.RegisterRequest	true	"Данные пользователя"
-// @Router			/auth/register [post]
+//	@summary		Register
+//	@tags			auth
+//	@Description	Регистрация пользователя
+//	@ID				register
+//	@Accept			json
+//	@Produce		json
+//	@Param			user	body	models.RegisterRequest	true	"Данные пользователя"
+//	@Router			/auth/register [post]
 func (jwt JWTAuthController) Register(c *gin.Context) {
 	// Парсинг запроса
 	var q models.RegisterRequest

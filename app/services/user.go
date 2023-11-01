@@ -30,13 +30,6 @@ func (s UserService) WithTrx(trxHandle *gorm.DB) domains.UserService {
 	return s
 }
 
-// Authorize call to register the user
-func (s UserService) Authorize(q *models.LoginRequest) (models.User, error) {
-	var user models.User
-	err := s.repository.Where("email = ?", q.Email).First(&user).Error
-	return user, err
-}
-
 // Register call to register the user
 func (s UserService) Register(q *models.RegisterRequest) error {
 	birthday, err := time.Parse(models.DateFormat, q.Birthday)
@@ -54,6 +47,12 @@ func (s UserService) Register(q *models.RegisterRequest) error {
 	}
 
 	return s.repository.Create(&user).Error
+}
+
+func (s UserService) GetUserByEmail(email *string) (models.User, error) {
+	var user models.User
+	err := s.repository.Where("email = ?", email).First(&user).Error
+	return user, err
 }
 
 // UpdateUser updates the user
