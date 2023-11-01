@@ -8,6 +8,6 @@ import (
 
 type UserService interface {
 	WithTrx(trxHandle *gorm.DB) UserService
-	Authorize(q *models.LoginRequest) (models.User, error)
+	GetUserByEmail(email *string) (models.User, error)
 	Register(q *models.RegisterRequest) error
 }
