@@ -10,30 +10,29 @@ EMAIL="user${RANDOM}@example.com"
 
 # Отправляем POST-запрос для регистрации пользователя
 RESPONSE=$(curl -s -X POST $API_URL/$REGISTER_URL \
-    -H "Content-Type: application/json" \
-    -d '{
+        -H "Content-Type: application/json" \
+        -d '{
         "email": "'$EMAIL'",
         "password": "'$PASSWORD'",
         "firstname": "Oleg",
         "lastname": "Safronov",
-        "age": 19,
-        "gender": true
-    }')
+        "birthday": "18-10-2004",
+        "gender": "Male"
+}')
 
 # Проверяем, успешна ли регистрация
 if [[ $(echo $RESPONSE | jq -r '.message') != "User registered successfully" ]]; then
-    echo "Failed to register user"
     echo $RESPONSE | jq
     exit 1
 fi
 
 # Отправляем POST-запрос для авторизации пользователя
 RESPONSE=$(curl -s -X POST $API_URL/$LOGIN_URL \
-    -H "Content-Type: application/json" \
-    -d '{
+        -H "Content-Type: application/json" \
+        -d '{
         "email": "'$EMAIL'",
         "password": "'$PASSWORD'"
-    }')
+}')
 
 # Проверяем, успешна ли авторизация
 if [[ $(echo $RESPONSE | jq -r '.token') == "null" ]]; then

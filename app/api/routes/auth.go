@@ -12,7 +12,7 @@ type AuthRoutes struct {
 	authController controllers.JWTAuthController
 }
 
-// Setup user routes
+// Setup auth routes
 func (s AuthRoutes) Setup() {
 	root := s.handler.Gin.Group("/api/v1")
 	{
@@ -24,7 +24,7 @@ func (s AuthRoutes) Setup() {
 	}
 }
 
-// NewAuthRoutes creates new user controller
+// NewAuthRoutes creates new auth controller
 func NewAuthRoutes(
 	logger lib.Logger,
 	handler lib.RequestHandler,

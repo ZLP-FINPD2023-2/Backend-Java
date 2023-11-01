@@ -1,6 +1,13 @@
 package models
 
+import "github.com/dgrijalva/jwt-go"
+
 const DateFormat = "02-01-2006"
+
+type TokenClaims struct {
+	User *User `json:"user"`
+	jwt.StandardClaims
+}
 
 type RegisterRequest struct {
 	Email      *string `json:"email"`
