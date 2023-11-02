@@ -77,7 +77,7 @@ func (s JWTAuthService) GetTokenClaims(tokenString string) (*models.TokenClaims,
 	claims := &models.TokenClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return s.env.SecretKey, nil
+		return []byte(s.env.SecretKey), nil
 	})
 
 	if err != nil {
