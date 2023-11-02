@@ -32,7 +32,6 @@ func NewRoutes(
 		authRoutes,
 		userRoutes,
 		docsRoutes,
-		userRoutes,
 	}
 }
 
