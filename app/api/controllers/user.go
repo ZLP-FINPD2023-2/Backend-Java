@@ -31,6 +31,7 @@ func NewUserController(
 
 // Удаление
 
+// @Security		ApiKeyAuth
 // @summary		Delete user
 // @tags			user
 // @Description	Удаление пользователя
@@ -61,4 +62,32 @@ func (uc UserController) Delete(c *gin.Context) {
 	c.JSON(http.StatusNoContent, gin.H{
 		"message": "User deleted successfully",
 	})
+}
+
+// Получение
+
+// @Security		ApiKeyAuth
+// @summary		Get user
+// @tags			user
+// @Description	Получение пользователя
+// @ID				get
+// @Accept			json
+// @Produce		json
+// @Router			/user [get]
+func (uc UserController) Get(c *gin.Context) {
+	c.Status(http.StatusNotImplemented)
+}
+
+// Обновление
+
+// @Security		ApiKeyAuth
+// @summary		Update user
+// @tags			user
+// @Description	Обновление пользователя
+// @ID				update
+// @Accept			json
+// @Produce		json
+// @Router			/user [patch]
+func (uc UserController) Update(c *gin.Context) {
+	c.Status(http.StatusNotImplemented)
 }

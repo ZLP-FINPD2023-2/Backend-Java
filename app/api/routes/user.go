@@ -18,6 +18,8 @@ type UserRoutes struct {
 func (s UserRoutes) Setup() {
 	root := s.handler.Gin.Group("/api/v1").Use(s.authMiddleware.Handler())
 	{
+		root.GET("/user", s.userController.Get)
+		root.PATCH("/user", s.userController.Update)
 		root.DELETE("/user", s.userController.Delete)
 	}
 }
