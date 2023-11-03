@@ -60,7 +60,7 @@ func (s UserService) GetUserByEmail(email *string) (models.User, error) {
 //	return s.repository.Save(&user).Error
 //}
 
-// DeleteUser deletes the user
-//func (s UserService) DeleteUser(id uint) error {
-//	return s.repository.Delete(&models.User{}, id).Error
-//}
+// Delete deletes the user
+func (s UserService) Delete(id uint) error {
+	return s.repository.Delete(&models.User{}, id).Error
+}
