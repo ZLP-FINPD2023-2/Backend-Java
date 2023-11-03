@@ -12,20 +12,20 @@ import (
 // UserController struct
 type UserController struct {
 	logger      lib.Logger
-	service     domains.AuthService
-	userService domains.UserService
+	service     domains.UserService
+	authService domains.AuthService
 }
 
 // NewUserController creates new controller
 func NewUserController(
 	logger lib.Logger,
-	service domains.AuthService,
-	userService domains.UserService,
+	service domains.UserService,
+	userService domains.AuthService,
 ) UserController {
 	return UserController{
 		logger:      logger,
 		service:     service,
-		userService: userService,
+		authService: userService,
 	}
 }
 
@@ -41,16 +41,16 @@ func NewUserController(
 // @Router			/user [delete]
 func (uc UserController) Delete(c *gin.Context) {
 	// Парсинг запроса
-	userId, exists := c.Get("userId")
-	if exists == false {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request body",
+	userId, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
 		})
 		return
 	}
 
 	// Удаление пользователя
-	if err := uc.userService.Delete(userId.(uint)); err != nil {
+	if err := uc.service.Delete(userId.(uint)); err != nil {
 		// Необработанные ошибки
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to delete user",

@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"finapp/models"
 	"net/http"
 	"strings"
 
@@ -57,14 +56,13 @@ func (m JWTAuthMiddleware) Handler() gin.HandlerFunc {
 			authToken := t[1]
 			authorized, err := m.service.Authorize(authToken)
 			if authorized {
-				var claims *models.TokenClaims
 				claims, err := m.service.GetTokenClaims(authToken)
 				if err != nil {
 					c.JSON(http.StatusUnauthorized, gin.H{
 						"error": err.Error(),
 					})
 				}
-				c.Set("userId", claims.User.ID)
+				c.Set("userID", claims.User.ID)
 				c.Next()
 				return
 			}
