@@ -74,34 +74,34 @@ func (uc UserController) Delete(c *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Router			/user [get]
-func (ctrl UserController) GetUser(c *gin.Context) {
+func (uc UserController) Get(c *gin.Context) {
 	userID, ok := c.Get("userID")
 	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Missing userID",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
 		})
 		return
 	}
 
-	userIDUint, ok := userID.(uint)
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid userID",
-		})
-		return
-	}
-
-	user, err := ctrl.userService.GetUser(userIDUint)
+	user, err := uc.service.GetUserByID(userID.(uint))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "User not found",
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
-}
+	response := gin.H{
+		"email":      user.Email,
+		"first_name": user.FirstName,
+		"last_name":  user.LastName,
+		"patronymic": user.Patronymic,
+		"gender":     user.Gender,
+		"birthday":   user.Birthday,
+	}
 
+	c.JSON(http.StatusOK, response)
+}
 
 // Обновление
 
@@ -116,4 +116,3 @@ func (ctrl UserController) GetUser(c *gin.Context) {
 func (uc UserController) Update(c *gin.Context) {
 	c.Status(http.StatusNotImplemented)
 }
-

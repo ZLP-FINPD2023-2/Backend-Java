@@ -1,8 +1,9 @@
 package services
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -55,9 +56,9 @@ func (s UserService) GetUserByEmail(email *string) (models.User, error) {
 	return user, err
 }
 
-func (s UserService) GetUser(userID uint) (models.User, error) {
+func (s UserService) GetUserByID(id uint) (models.User, error) {
 	var user models.User
-	err := s.repository.Where("id = ?", userID).First(&user).Error
+	err := s.repository.First(&user, id).Error
 	return user, err
 }
 
