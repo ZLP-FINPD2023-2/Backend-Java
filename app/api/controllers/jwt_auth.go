@@ -2,10 +2,12 @@ package controllers
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"golang.org/x/crypto/bcrypt"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -52,8 +54,8 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 		return
 	}
 
-	// Авторизация пользователя
-	user, err := jwt.userService.Authorize(&q)
+	// Нахождение пользователя по email пользователя
+	user, err := jwt.userService.GetUserByEmail(q.Email)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid email or password",
@@ -61,8 +63,25 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 		return
 	}
 
+	// Сравнение хэша и пароля
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(q.Password))
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid email or password",
+		})
+		return
+	}
+
+	// Получение токена
+	token, err := jwt.service.CreateToken(&user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to create token",
+		})
+		return
+	}
+
 	// Отправка токена
-	token := jwt.service.CreateToken(user)
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 	})

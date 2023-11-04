@@ -9,6 +9,7 @@ import (
 // Module exports dependency to container
 var Module = fx.Options(
 	fx.Provide(NewAuthRoutes),
+	fx.Provide(NewUserRoutes),
 	fx.Provide(NewDocsRoutes),
 	fx.Provide(NewRoutes),
 	fx.Provide(NewUserRoutes),
@@ -25,11 +26,13 @@ type Route interface {
 // NewRoutes sets up routes
 func NewRoutes(
 	authRoutes AuthRoutes,
+	userRoutes UserRoutes,
 	docsRoutes DocsRoutes,
 	userRoutes UserRoutes,
 ) Routes {
 	return Routes{
 		authRoutes,
+		userRoutes,
 		docsRoutes,
 		userRoutes,
 	}

@@ -1,9 +1,8 @@
 package services
 
 import (
-	"time"
-
 	"gorm.io/gorm"
+	"time"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -31,13 +30,6 @@ func (s UserService) WithTrx(trxHandle *gorm.DB) domains.UserService {
 	return s
 }
 
-// Authorize call to register the user
-func (s UserService) Authorize(q *models.LoginRequest) (models.User, error) {
-	var user models.User
-	err := s.repository.Where("email = ?", q.Email).First(&user).Error
-	return user, err
-}
-
 // Register call to register the user
 func (s UserService) Register(q *models.RegisterRequest) error {
 	birthday, err := time.Parse(models.DateFormat, q.Birthday)
@@ -57,18 +49,24 @@ func (s UserService) Register(q *models.RegisterRequest) error {
 	return s.repository.Create(&user).Error
 }
 
-// UpdateUser updates the user
-//func (s UserService) UpdateUser(user models.User) error {
-//	return s.repository.Save(&user).Error
-//}
-
-// DeleteUser deletes the user
-//func (s UserService) DeleteUser(id uint) error {
-//	return s.repository.Delete(&models.User{}, id).Error
-//}
+func (s UserService) GetUserByEmail(email *string) (models.User, error) {
+	var user models.User
+	err := s.repository.Where("email = ?", email).First(&user).Error
+	return user, err
+}
 
 func (s UserService) GetUser(userID uint) (models.User, error) {
 	var user models.User
 	err := s.repository.Where("id = ?", userID).First(&user).Error
 	return user, err
+}
+
+// UpdateUser updates the user
+//func (s UserService) UpdateUser(user models.User) error {
+//	return s.repository.Save(&user).Error
+//}
+
+// Delete deletes the user
+func (s UserService) Delete(id uint) error {
+	return s.repository.Delete(&models.User{}, id).Error
 }

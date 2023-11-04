@@ -2,6 +2,8 @@ package services
 
 import (
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 
@@ -29,6 +31,11 @@ func (s JWTAuthService) Authorize(tokenString string) (bool, error) {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		return []byte(s.env.SecretKey), nil
 	})
+
+	if err != nil {
+		return false, err
+	}
+
 	if token.Valid {
 		return true, nil
 	} else if ve, ok := err.(*jwt.ValidationError); ok {
@@ -43,17 +50,49 @@ func (s JWTAuthService) Authorize(tokenString string) (bool, error) {
 }
 
 // CreateToken creates jwt auth token
-func (s JWTAuthService) CreateToken(user models.User) string {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":    user.ID,
-		"email": user.Email,
-	})
+func (s JWTAuthService) CreateToken(user *models.User) (string, error) {
+	unixTime := time.Now().Unix()
+	tokenExp := unixTime + 60*15
 
+	claims := models.TokenClaims{
+		User: user,
+		StandardClaims: jwt.StandardClaims{
+			IssuedAt:  unixTime,
+			ExpiresAt: tokenExp,
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(s.env.SecretKey))
 
 	if err != nil {
-		s.logger.Error("JWT validation failed: ", err)
+		s.logger.Error("Failed to sign token string")
+		return "", err
 	}
 
-	return tokenString
+	return tokenString, nil
+}
+
+func (s JWTAuthService) GetTokenClaims(tokenString string) (*models.TokenClaims, error) {
+	claims := &models.TokenClaims{}
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.env.SecretKey), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !token.Valid {
+		return nil, fmt.Errorf("ID token is invalid")
+	}
+
+	claims, ok := token.Claims.(*models.TokenClaims)
+
+	if !ok {
+		return nil, fmt.Errorf("ID token valid but couldn't parse claims")
+	}
+
+	return claims, nil
 }
