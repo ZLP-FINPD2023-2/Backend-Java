@@ -7,6 +7,7 @@ import (
 
 	"finapp/domains"
 	"finapp/lib"
+	"finapp/models"
 )
 
 // UserController struct
@@ -75,7 +76,32 @@ func (uc UserController) Delete(c *gin.Context) {
 // @Produce		json
 // @Router			/user [get]
 func (uc UserController) Get(c *gin.Context) {
-	c.Status(http.StatusNotImplemented)
+	userID, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
+		})
+		return
+	}
+
+	user, err := uc.service.Get(userID.(uint))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
+		})
+		return
+	}
+
+	response := models.GetResponse{
+		Email:      user.Email,
+		First_name: user.FirstName,
+		Last_name:  user.LastName,
+		Patronymic: user.Patronymic,
+		Gender:     user.Gender,
+		Birthday:   user.Birthday.Format(models.DateFormat),
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 // Обновление

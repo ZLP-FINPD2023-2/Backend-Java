@@ -48,3 +48,13 @@ func (user *User) BeforeSave(tx *gorm.DB) error {
 
 	return nil
 }
+
+// Структура ответа на GET запрос
+type GetResponse struct {
+	Email      *string `json:"email"`
+	First_name string  `json:"first_name"`
+	Last_name  string  `json:"last_name"`
+	Patronymic string  `json:"patronymic"`
+	Gender     Gender  `json:"gender"`
+	Birthday   string  `json:"birthday"`
+}
