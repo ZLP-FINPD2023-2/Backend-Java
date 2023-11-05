@@ -7,6 +7,7 @@ import (
 
 	"finapp/domains"
 	"finapp/lib"
+	"finapp/models"
 )
 
 // UserController struct
@@ -83,7 +84,7 @@ func (uc UserController) Get(c *gin.Context) {
 		return
 	}
 
-	user, err := uc.service.GetUserByID(userID.(uint))
+	user, err := uc.service.Get(userID.(uint))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get user",
@@ -91,13 +92,13 @@ func (uc UserController) Get(c *gin.Context) {
 		return
 	}
 
-	response := gin.H{
-		"email":      user.Email,
-		"first_name": user.FirstName,
-		"last_name":  user.LastName,
-		"patronymic": user.Patronymic,
-		"gender":     user.Gender,
-		"birthday":   user.Birthday,
+	response := models.GetResponse{
+		Email:      user.Email,
+		First_name: user.FirstName,
+		Last_name:  user.LastName,
+		Patronymic: user.Patronymic,
+		Gender:     user.Gender,
+		Birthday:   user.Birthday.Format(models.DateFormat),
 	}
 
 	c.JSON(http.StatusOK, response)

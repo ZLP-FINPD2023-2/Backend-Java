@@ -29,4 +29,3 @@ func (r UserRepository) WithTrx(trxHandle *gorm.DB) UserRepository {
 	r.Database.DB = trxHandle
 	return r
 }
-

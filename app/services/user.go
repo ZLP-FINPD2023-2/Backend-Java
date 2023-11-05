@@ -56,7 +56,7 @@ func (s UserService) GetUserByEmail(email *string) (models.User, error) {
 	return user, err
 }
 
-func (s UserService) GetUserByID(id uint) (models.User, error) {
+func (s UserService) Get(id uint) (models.User, error) {
 	var user models.User
 	err := s.repository.First(&user, id).Error
 	return user, err
