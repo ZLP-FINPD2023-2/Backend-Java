@@ -29,12 +29,12 @@ func NewTrxController(
 
 func (tc TrxController) Get(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, gin.H{
-		"message": "GET responce",
+		"message": "GET response",
 	})
 }
 
 func (tc TrxController) Post(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, gin.H{
-		"message": "POST responce",
+		"message": "POST response",
 	})
 }

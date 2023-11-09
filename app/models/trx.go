@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 
 	"time"
@@ -9,8 +10,9 @@ import (
 
 type Trx struct {
 	gorm.Model
-	Name string    `validate:"required"`
-	Date time.Time `validete:"required,custom=isNotFutureDate"`
+	Name   string          `validate:"required"`
+	Date   time.Time       `validate:"required,custom=isNotFutureDate"`
+	Amount decimal.Decimal `validate:"required"`
 }
 
 func (t Trx) TableName() string {
