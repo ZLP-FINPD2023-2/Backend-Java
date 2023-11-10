@@ -1,11 +1,11 @@
 package models
 
 import (
+	"time"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
-
-	"time"
 )
 
 type Trx struct {
