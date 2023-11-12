@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -32,14 +33,14 @@ func NewUserController(
 
 // Удаление
 
-//	@Security		ApiKeyAuth
-//	@summary		Delete user
-//	@tags			user
-//	@Description	Удаление пользователя
-//	@ID				delete
-//	@Accept			json
-//	@Produce		json
-//	@Router			/user [delete]
+// @Security		ApiKeyAuth
+// @summary		Delete user
+// @tags			user
+// @Description	Удаление пользователя
+// @ID				delete
+// @Accept			json
+// @Produce		json
+// @Router			/user [delete]
 func (uc UserController) Delete(c *gin.Context) {
 	// Парсинг запроса
 	userId, ok := c.Get("userID")
@@ -67,14 +68,14 @@ func (uc UserController) Delete(c *gin.Context) {
 
 // Получение
 
-//	@Security		ApiKeyAuth
-//	@summary		Get user
-//	@tags			user
-//	@Description	Получение пользователя
-//	@ID				get
-//	@Accept			json
-//	@Produce		json
-//	@Router			/user [get]
+// @Security		ApiKeyAuth
+// @summary		Get user
+// @tags			user
+// @Description	Получение пользователя
+// @ID				get
+// @Accept			json
+// @Produce		json
+// @Router			/user [get]
 func (uc UserController) Get(c *gin.Context) {
 	userID, ok := c.Get("userID")
 	if !ok {
@@ -114,6 +115,48 @@ func (uc UserController) Get(c *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Router			/user [patch]
+
 func (uc UserController) Update(c *gin.Context) {
-	c.Status(http.StatusNotImplemented)
+	// Парсинг запроса
+	var updateRequest models.UpdateRequest
+	if err := c.ShouldBindJSON(&updateRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid update request"})
+		return
+	}
+
+	// Получение идентификатора пользователя из контекста
+	userID, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	// Получение текущего пользователя из службы
+	user, err := uc.service.Get(userID.(uint))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	// Обновление полей пользователя на основе запроса на обновление
+	user.FirstName = updateRequest.FirstName
+	user.LastName = updateRequest.LastName
+	user.Patronymic = updateRequest.Patronymic
+	user.Gender = updateRequest.Gender
+	// Преобразование строки с датой рождения в формат time.Time
+	updatedBirthday, err := time.Parse(models.DateFormat, updateRequest.Birthday)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid birthday format"})
+		return
+	}
+	user.Birthday = updatedBirthday
+
+	// Вызов метода Update для сохранения изменений в базе данных
+	if err := uc.service.Update(&user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+		return
+	}
+
+	// Ответ успешного обновления
+	c.JSON(http.StatusOK, gin.H{"message": "User updated successfully"})
 }

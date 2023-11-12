@@ -12,4 +12,5 @@ type UserService interface {
 	Register(q *models.RegisterRequest) error
 	Delete(id uint) error
 	Get(id uint) (models.User, error)
+	Update(user *models.User) error
 }

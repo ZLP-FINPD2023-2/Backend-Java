@@ -59,3 +59,11 @@ type GetResponse struct {
 	Gender     Gender  `json:"gender"`
 	Birthday   string  `json:"birthday"`
 }
+
+type UpdateRequest struct {
+	FirstName  string `json:"first_name"`
+	LastName   string `json:"last_name"`
+	Patronymic string `json:"patronymic"`
+	Gender     Gender `json:"gender"`
+	Birthday   string `json:"birthday"`
+}
