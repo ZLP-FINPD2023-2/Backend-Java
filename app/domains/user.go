@@ -13,4 +13,5 @@ type UserService interface {
 	Delete(id uint) error
 	Get(id uint) (models.User, error)
 	Update(user *models.User) error
+	CreateTransaction(userID uint, amount float64, currency, reason string) error
 }

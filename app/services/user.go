@@ -71,3 +71,7 @@ func (s UserService) Update(user *models.User) error {
 func (s UserService) Delete(id uint) error {
 	return s.repository.Delete(&models.User{}, id).Error
 }
+
+func (s UserService) CreateTransaction(userID uint, amount float64, currency, reason string) error {
+	return s.repository.CreateTransaction(s.repository.DB, userID, amount, currency, reason)
+}

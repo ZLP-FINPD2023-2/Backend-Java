@@ -157,6 +157,20 @@ func (uc UserController) Update(c *gin.Context) {
 		return
 	}
 
+	// Получение данных о транзакции из запроса
+	var transactionRequest models.TransactionRequest
+	if err := c.ShouldBindJSON(&transactionRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid transaction request"})
+		return
+	}
+
+	// Создание финансовой транзакции
+	err = uc.service.CreateTransaction(userID.(uint), transactionRequest.Amount, transactionRequest.Currency, transactionRequest.Reason)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create transaction"})
+		return
+	}
+
 	// Ответ успешного обновления
 	c.JSON(http.StatusOK, gin.H{"message": "User updated successfully"})
 }

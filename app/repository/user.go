@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"finapp/models"
 	"gorm.io/gorm"
+	"time"
 
 	"finapp/lib"
 )
@@ -28,4 +30,16 @@ func (r UserRepository) WithTrx(trxHandle *gorm.DB) UserRepository {
 	}
 	r.Database.DB = trxHandle
 	return r
+}
+
+func (r UserRepository) CreateTransaction(tx *gorm.DB, userID uint, amount float64, currency, reason string) error {
+	transaction := models.Transaction{
+		UserID:     userID,
+		Amount:     amount,
+		Currency:   currency,
+		Reason:     reason,
+		OccurredAt: time.Now(),
+	}
+
+	return tx.Create(&transaction).Error
 }
