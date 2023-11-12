@@ -17,13 +17,6 @@ type UserService struct {
 	repository repository.UserRepository
 }
 
-type UserService interface {
-	// Другие методы...
-
-	// Update обновляет информацию о пользователе
-	Update(user *models.User) error
-}
-
 // NewUserService creates a new userservice
 func NewUserService(logger lib.Logger, repository repository.UserRepository) domains.UserService {
 	return UserService{
@@ -70,8 +63,8 @@ func (s UserService) Get(id uint) (models.User, error) {
 }
 
 // UpdateUser updates the user
-func (s UserService) UpdateUser(user models.User) error {
-	return s.repository.Save(&user).Error
+func (s UserService) Update(user *models.User) error {
+	return s.repository.Save(user).Error
 }
 
 // Delete deletes the user
