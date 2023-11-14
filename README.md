@@ -25,6 +25,7 @@ docker compose up
 
 ```bash
 cd app
+swag init -g server.go
 go run ./server.go app:serve
 ```
 
