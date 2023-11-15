@@ -8,10 +8,16 @@ import (
 	"gorm.io/gorm"
 )
 
+type TrxResponse struct {
+	Name   string          `json:"name"`
+	Date   time.Time       `json:"date"`
+	Amount decimal.Decimal `json:"amount"`
+}
+
 type Trx struct {
 	gorm.Model
 	Name   string          `validate:"required"`
-	Date   time.Time       `validate:"required,custom=isNotFutureDate"`
+	Date   time.Time       `validate:"required,isNotFutureDate"`
 	Amount decimal.Decimal `validate:"required"`
 }
 
