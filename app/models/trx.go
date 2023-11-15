@@ -8,6 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type TrxRequest struct {
+	Name   string `json:"name"`
+	Date   string `json:"time"`
+	Amount string `json:"amount"`
+}
+
 type Trx struct {
 	gorm.Model
 	Name   string          `validate:"required"`
