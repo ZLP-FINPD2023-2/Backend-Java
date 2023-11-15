@@ -62,8 +62,14 @@ func (tc TrxController) Post(c *gin.Context) {
 		})
 		return
 	}
-	tc.service.
-		c.JSON(http.StatusNotImplemented, gin.H{
-		"message": "Not implemented",
+	err := tc.service.Create(&transaction)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Transaction added successfully",
 	})
 }

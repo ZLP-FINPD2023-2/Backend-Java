@@ -17,7 +17,7 @@ type TrxService struct {
 }
 
 func NewTrxService(logger lib.Logger, repository repository.TrxRepository) domains.TrxService {
-	return TrxService{
+	return &TrxService{
 		logger:     logger,
 		repository: repository,
 	}
@@ -27,13 +27,18 @@ func (s TrxService) WithTrx(trxHandle *gorm.DB) domains.TrxService {
 	return s
 }
 func (s TrxService) Create(trxRequest *models.TrxRequest) error {
-	date, _ := time.Parse(models.DateFormat, trxRequest.Date)
-	amount, _ := decimal.NewFromString(trxRequest.Amount)
+	date, err := time.Parse(models.DateFormat, trxRequest.Date)
+	if err != nil {
+		return err
+	}
+	amount, err := decimal.NewFromString(trxRequest.Amount)
+	if err != nil {
+		return err
+	}
 	transaction := models.Trx{
 		Name:   trxRequest.Name,
 		Date:   date,
 		Amount: amount,
 	}
-
 	return s.repository.Create(&transaction).Error
 }
