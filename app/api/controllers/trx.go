@@ -44,10 +44,19 @@ func NewTrxController(
 //	@Success		200			{array}	models.TrxResponse
 //	@Router			/trx [get]
 func (tc TrxController) Get(c *gin.Context) {
-	trxs, err := tc.service.Get(c)
+	userID, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
+		})
+		return
+	}
+
+	trxs, err := tc.service.Get(c, userID.(uint))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to get transaction",
+			"error":       "Failed to get transaction",
+			"description": err.Error(),
 		})
 		return
 	}
@@ -55,7 +64,7 @@ func (tc TrxController) Get(c *gin.Context) {
 	var trxResponses []models.TrxResponse
 	for _, trx := range trxs {
 		trxResponses = append(trxResponses, models.TrxResponse{
-			Name:   trx.Name,
+			Title:  trx.Title,
 			Date:   trx.Date,
 			Amount: trx.Amount,
 		})
@@ -77,13 +86,23 @@ func (tc TrxController) Get(c *gin.Context) {
 //	@Router			/trx [post]
 func (tc TrxController) Post(c *gin.Context) {
 	var transaction models.TrxRequest
+
 	if err := c.ShouldBindJSON(&transaction); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid request body",
 		})
 		return
 	}
-	err := tc.service.Create(&transaction)
+
+	userID, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
+		})
+		return
+	}
+
+	err := tc.service.Create(&transaction, userID.(uint))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),

@@ -9,6 +9,6 @@ import (
 
 type TrxService interface {
 	WithTrx(trxHandle *gorm.DB) TrxService
-	Get(c *gin.Context) ([]models.Trx, error)
-	Create(trxRequest *models.TrxRequest) error
+	Get(c *gin.Context, userID uint) ([]models.Trx, error)
+	Create(trxRequest *models.TrxRequest, userID uint) error
 }

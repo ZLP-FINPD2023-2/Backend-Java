@@ -1,7 +1,6 @@
 package services
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -31,36 +30,33 @@ func (s TrxService) WithTrx(trxHandle *gorm.DB) domains.TrxService {
 	return s
 }
 
-func (s TrxService) Get(c *gin.Context) ([]models.Trx, error) {
+func (s TrxService) Get(c *gin.Context, userID uint) ([]models.Trx, error) {
 	var trxs []models.Trx
 
-	// Нахождение параметров
-	amountMinStr := c.Query("amount_min")
-	amountMaxStr := c.Query("amount_max")
-	dateFromStr := c.Query("date_from")
-	dateToStr := c.Query("date_to")
-
 	// Создание запроса
-	query := s.repository.DB.Where(&models.Trx{})
+	query := s.repository.DB.Where("user_id = ?", userID)
 
 	// Фильтрация запроса
-	if amountMinStr != "" {
-		amountMin, err := strconv.ParseFloat(amountMinStr, 64)
+	/* TODO: Реализовать фильтрацию по сумме
+
+	if amountMinStr := c.Query("amount_min"); amountMinStr != "" {
+		amountMin, err := decimal.NewFromString(amountMinStr)
 		if err != nil {
 			return nil, err
 		}
 		query = query.Where("amount >= ?", amountMin)
 	}
 
-	if amountMaxStr != "" {
-		amountMax, err := strconv.ParseFloat(amountMaxStr, 64)
+	if amountMaxStr := c.Query("amount_max"); amountMaxStr != "" {
+		amountMax, err := decimal.NewFromString(amountMaxStr)
 		if err != nil {
 			return nil, err
 		}
 		query = query.Where("amount <= ?", amountMax)
 	}
+	*/
 
-	if dateFromStr != "" {
+	if dateFromStr := c.Query("date_from"); dateFromStr != "" {
 		dateFrom, err := time.Parse(models.DateFormat, dateFromStr)
 		if err != nil {
 			return nil, err
@@ -68,7 +64,7 @@ func (s TrxService) Get(c *gin.Context) ([]models.Trx, error) {
 		query = query.Where("date >= ?", dateFrom)
 	}
 
-	if dateToStr != "" {
+	if dateToStr := c.Query("date_to"); dateToStr != "" {
 		dateTo, err := time.Parse(models.DateFormat, dateToStr)
 		if err != nil {
 			return nil, err
@@ -82,7 +78,7 @@ func (s TrxService) Get(c *gin.Context) ([]models.Trx, error) {
 	return trxs, err
 }
 
-func (s TrxService) Create(trxRequest *models.TrxRequest) error {
+func (s TrxService) Create(trxRequest *models.TrxRequest, userID uint) error {
 	date, err := time.Parse(models.DateFormat, trxRequest.Date)
 	if err != nil {
 		return err
@@ -94,7 +90,8 @@ func (s TrxService) Create(trxRequest *models.TrxRequest) error {
 	}
 
 	transaction := models.Trx{
-		Name:   trxRequest.Name,
+		UserID: userID,
+		Title:  trxRequest.Title,
 		Date:   date,
 		Amount: amount,
 	}
