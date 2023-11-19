@@ -31,14 +31,14 @@ func (u User) TableName() string {
 	return "users"
 }
 
-func CustomValidator() *validator.Validate {
+func (u User) customValidator() *validator.Validate {
 	v := validator.New()
 	return v
 }
 
 func (user *User) BeforeSave(tx *gorm.DB) error {
 	// Валидация
-	validate := CustomValidator()
+	validate := user.customValidator()
 	if err := validate.Struct(user); err != nil {
 		return err
 	}

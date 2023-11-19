@@ -44,7 +44,7 @@ func IsNotFutureDate(fldLvl validator.FieldLevel) bool {
 	return dateToValidate.Before(currentDate) || dateToValidate.Equal(currentDate)
 }
 
-func customValidator() *validator.Validate {
+func (trx Trx) customValidator() *validator.Validate {
 	v := validator.New()
 	v.RegisterValidation("isNotFutureDate", IsNotFutureDate)
 	return v
@@ -52,7 +52,7 @@ func customValidator() *validator.Validate {
 
 func (trx *Trx) BeforeSave(db *gorm.DB) error {
 	// Валидация
-	validate := customValidator()
+	validate := trx.customValidator()
 	if err := validate.Struct(trx); err != nil {
 		return err
 	}
