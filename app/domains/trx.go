@@ -1,6 +1,7 @@
 package domains
 
 import (
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	"finapp/models"
@@ -8,5 +9,6 @@ import (
 
 type TrxService interface {
 	WithTrx(trxHandle *gorm.DB) TrxService
+	Get(c *gin.Context) ([]models.Trx, error)
 	Create(trxRequest *models.TrxRequest) error
 }

@@ -8,6 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type TrxResponse struct {
+	Name   string          `json:"name"`
+	Date   time.Time       `json:"date"`
+	Amount decimal.Decimal `json:"amount"`
+}
+
 type TrxRequest struct {
 	Name   string `json:"name"`
 	Date   string `json:"date"`
