@@ -1,12 +1,13 @@
 package controllers
 
 import (
-	"finapp/models"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 
 	"finapp/domains"
 	"finapp/lib"
+	"finapp/models"
 )
 
 type TrxController struct {
@@ -29,14 +30,14 @@ func NewTrxController(
 
 // Получение
 
-// @Security		ApiKeyAuth
-// @summary		Get trx
-// @tags			trx
-// @Description	Получение транзакции
-// @ID				get
-// @Accept			json
-// @Produce		json
-// @Router			/trx [get]
+//	@Security		ApiKeyAuth
+//	@summary		Get trx
+//	@tags			trx
+//	@Description	Получение транзакции
+//	@ID				get
+//	@Accept			json
+//	@Produce		json
+//	@Router			/trx [get]
 func (tc TrxController) Get(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, gin.H{
 		"message": "Not implemented",
@@ -45,15 +46,15 @@ func (tc TrxController) Get(c *gin.Context) {
 
 // Создание
 
-// @Security		ApiKeyAuth
-// @summary		Create trx
-// @tags			trx
-// @Description	Создание транзакции
-// @ID				post
-// @Accept			json
-// @Produce		json
-// @Param  transaction	body	models.TrxRequest	true	"Данные пользователя"
-// @Router			/trx [post]
+//	@Security		ApiKeyAuth
+//	@summary		Create trx
+//	@tags			trx
+//	@Description	Создание транзакции
+//	@ID				post
+//	@Accept			json
+//	@Produce		json
+//	@Param			transaction	body	models.TrxRequest	true	"Данные пользователя"
+//	@Router			/trx [post]
 func (tc TrxController) Post(c *gin.Context) {
 	var transaction models.TrxRequest
 	if err := c.ShouldBindJSON(&transaction); err != nil {

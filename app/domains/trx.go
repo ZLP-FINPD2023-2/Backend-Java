@@ -1,8 +1,9 @@
 package domains
 
 import (
-	"finapp/models"
 	"gorm.io/gorm"
+
+	"finapp/models"
 )
 
 type TrxService interface {

@@ -1,13 +1,14 @@
 package services
 
 import (
-	"finapp/models"
+	"time"
+
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
-	"time"
 
 	"finapp/domains"
 	"finapp/lib"
+	"finapp/models"
 	"finapp/repository"
 )
 
@@ -17,28 +18,33 @@ type TrxService struct {
 }
 
 func NewTrxService(logger lib.Logger, repository repository.TrxRepository) domains.TrxService {
-	return &TrxService{
+	return TrxService{
 		logger:     logger,
 		repository: repository,
 	}
 }
+
 func (s TrxService) WithTrx(trxHandle *gorm.DB) domains.TrxService {
 	s.repository = s.repository.WithTrx(trxHandle)
 	return s
 }
+
 func (s TrxService) Create(trxRequest *models.TrxRequest) error {
 	date, err := time.Parse(models.DateFormat, trxRequest.Date)
 	if err != nil {
 		return err
 	}
+
 	amount, err := decimal.NewFromString(trxRequest.Amount)
 	if err != nil {
 		return err
 	}
+
 	transaction := models.Trx{
 		Name:   trxRequest.Name,
 		Date:   date,
 		Amount: amount,
 	}
+
 	return s.repository.Create(&transaction).Error
 }
