@@ -14,6 +14,12 @@ type TrxResponse struct {
 	Amount decimal.Decimal `json:"amount"`
 }
 
+type TrxRequest struct {
+	Name   string `json:"name"`
+	Date   string `json:"date"`
+	Amount string `json:"amount"`
+}
+
 type Trx struct {
 	gorm.Model
 	Name   string          `validate:"required"`

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 
 	"finapp/domains"
@@ -24,6 +25,7 @@ func NewTrxService(logger lib.Logger, repository repository.TrxRepository) domai
 		repository: repository,
 	}
 }
+
 func (s TrxService) WithTrx(trxHandle *gorm.DB) domains.TrxService {
 	s.repository = s.repository.WithTrx(trxHandle)
 	return s
@@ -78,4 +80,24 @@ func (s TrxService) Get(c *gin.Context) ([]models.Trx, error) {
 	err := query.Find(&trxs).Error
 
 	return trxs, err
+}
+
+func (s TrxService) Create(trxRequest *models.TrxRequest) error {
+	date, err := time.Parse(models.DateFormat, trxRequest.Date)
+	if err != nil {
+		return err
+	}
+
+	amount, err := decimal.NewFromString(trxRequest.Amount)
+	if err != nil {
+		return err
+	}
+
+	transaction := models.Trx{
+		Name:   trxRequest.Name,
+		Date:   date,
+		Amount: amount,
+	}
+
+	return s.repository.Create(&transaction).Error
 }
