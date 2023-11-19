@@ -7,6 +7,7 @@ import (
 
 	"finapp/domains"
 	"finapp/lib"
+	"finapp/models"
 )
 
 type TrxController struct {
@@ -52,9 +53,24 @@ func (tc TrxController) Get(c *gin.Context) {
 //	@ID				post
 //	@Accept			json
 //	@Produce		json
+//	@Param			transaction	body	models.TrxRequest	true	"Данные пользователя"
 //	@Router			/trx [post]
 func (tc TrxController) Post(c *gin.Context) {
-	c.JSON(http.StatusNotImplemented, gin.H{
-		"message": "Not implemented",
+	var transaction models.TrxRequest
+	if err := c.ShouldBindJSON(&transaction); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request body",
+		})
+		return
+	}
+	err := tc.service.Create(&transaction)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Transaction added successfully",
 	})
 }
