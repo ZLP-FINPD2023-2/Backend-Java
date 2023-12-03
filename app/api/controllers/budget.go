@@ -62,6 +62,7 @@ func (bc BudgetController) Get(c *gin.Context) {
 	for _, budget := range budgets {
 		budgetResponses = append(budgetResponses, models.BudgetGetResponse{
 			Title: budget.Title,
+			ID:    budget.ID,
 		})
 	}
 

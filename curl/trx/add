@@ -4,12 +4,14 @@ API_URL="http://localhost:8080/api/v1"
 USER_URL="trx"
 
 # Проверка наличия аргумента (токена)
-if [ $# -eq 0 ]; then
-    echo "Usage: $0 <token>"
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 <budget_from> <budget_to> <token>"
     exit 1
 fi
 
-TOKEN="$1"
+FROM="$1"
+TO="$2"
+TOKEN="$3"
 
 # Отправляем PATCH-запрос
 RESPONSE=$(curl -s -X POST $API_URL/$USER_URL \
@@ -17,7 +19,9 @@ RESPONSE=$(curl -s -X POST $API_URL/$USER_URL \
 {
   "amount": "'$RANDOM'",
   "date": "10-10-2003",
-  "name": "string"
+  "title": "trx_'$RANDOM'",
+  "from": '$FROM',
+  "to": '$TO'
 }
 ')
 

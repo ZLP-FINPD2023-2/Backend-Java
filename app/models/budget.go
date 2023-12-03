@@ -12,7 +12,7 @@ type Budget struct {
 }
 
 func (b Budget) TableName() string {
-	return "transactions"
+	return "budgets"
 }
 
 func (b Budget) customValidator() *validator.Validate {
@@ -36,4 +36,5 @@ type BudgetCreateRequest struct {
 
 type BudgetGetResponse struct {
 	Title string `json:"title"`
+	ID    uint   `json:"id"`
 }

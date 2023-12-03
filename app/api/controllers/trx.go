@@ -64,9 +64,11 @@ func (tc TrxController) Get(c *gin.Context) {
 	var trxResponses []models.TrxResponse
 	for _, trx := range trxs {
 		trxResponses = append(trxResponses, models.TrxResponse{
-			Title:  trx.Title,
-			Date:   trx.Date,
-			Amount: trx.Amount,
+			Title:      trx.Title,
+			Date:       trx.Date,
+			Amount:     trx.Amount,
+			BudgetFrom: trx.BudgetFrom,
+			BudgetTo:   trx.BudgetTo,
 		})
 	}
 
@@ -105,7 +107,7 @@ func (tc TrxController) Post(c *gin.Context) {
 	err := tc.service.Create(&transaction, userID.(uint))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
+			"error": err.Error(),
 		})
 		return
 	}

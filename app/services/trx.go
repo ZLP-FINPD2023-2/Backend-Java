@@ -14,14 +14,20 @@ import (
 )
 
 type TrxService struct {
-	logger     lib.Logger
-	repository repository.TrxRepository
+	logger           lib.Logger
+	repository       repository.TrxRepository
+	budgetRepository repository.BudgetRepository
 }
 
-func NewTrxService(logger lib.Logger, repository repository.TrxRepository) domains.TrxService {
+func NewTrxService(
+	logger lib.Logger,
+	repository repository.TrxRepository,
+	budgetRepository repository.BudgetRepository,
+) domains.TrxService {
 	return TrxService{
-		logger:     logger,
-		repository: repository,
+		logger:           logger,
+		repository:       repository,
+		budgetRepository: budgetRepository,
 	}
 }
 
@@ -34,7 +40,7 @@ func (s TrxService) Get(c *gin.Context, userID uint) ([]models.Trx, error) {
 	var trxs []models.Trx
 
 	// Создание запроса
-	query := s.repository.DB.Where("user_id = ?", userID)
+	query := s.repository.Where("user_id = ?", userID)
 
 	// Фильтрация запроса
 	/* TODO: Реализовать фильтрацию по сумме
@@ -89,11 +95,23 @@ func (s TrxService) Create(trxRequest *models.TrxRequest, userID uint) error {
 		return err
 	}
 
+	_, err = s.budgetRepository.Get(trxRequest.BudgetTo, userID)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.budgetRepository.Get(trxRequest.BudgetFrom, userID)
+	if err != nil {
+		return err
+	}
+
 	transaction := models.Trx{
-		UserID: userID,
-		Title:  trxRequest.Title,
-		Date:   date,
-		Amount: amount,
+		UserID:     userID,
+		Title:      trxRequest.Title,
+		Date:       date,
+		Amount:     amount,
+		BudgetTo:   trxRequest.BudgetTo,
+		BudgetFrom: trxRequest.BudgetFrom,
 	}
 
 	return s.repository.Create(&transaction).Error
