@@ -16,7 +16,7 @@ type TrxRoutes struct {
 func (s TrxRoutes) Setup() {
 	root := s.handler.Gin.Group("/api/v1").Use(s.authMiddleware.Handler())
 	{
-		root.GET("/trx", s.trxController.Get)
+		root.GET("/trx", s.trxController.List)
 		root.POST("/trx", s.trxController.Post)
 	}
 }

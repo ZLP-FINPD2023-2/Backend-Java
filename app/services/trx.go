@@ -36,7 +36,7 @@ func (s TrxService) WithTrx(trxHandle *gorm.DB) domains.TrxService {
 	return s
 }
 
-func (s TrxService) Get(c *gin.Context, userID uint) ([]models.Trx, error) {
+func (s TrxService) List(c *gin.Context, userID uint) ([]models.Trx, error) {
 	var trxs []models.Trx
 
 	// Создание запроса

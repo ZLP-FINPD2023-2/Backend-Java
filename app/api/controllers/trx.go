@@ -31,19 +31,17 @@ func NewTrxController(
 // Получение
 
 //	@Security		ApiKeyAuth
-//	@summary		Get trx
+//	@summary		List trx
 //	@tags			trx
 //	@Description	Получение транзакции
 //	@ID				get_trx
 //	@Accept			json
 //	@Produce		json
-//	@Param			amount_min	query	number	false	"Минимальное значение суммы транзакции"
-//	@Param			amount_max	query	number	false	"Максимальное значение суммы транзакции"
 //	@Param			date_from	query	string	false	"Дата начала периода в формате 18-10-2004"
 //	@Param			date_to		query	string	false	"Дата окончания периода в формате 18-10-2004"
 //	@Success		200			{array}	models.TrxResponse
 //	@Router			/trx [get]
-func (tc TrxController) Get(c *gin.Context) {
+func (tc TrxController) List(c *gin.Context) {
 	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -52,7 +50,7 @@ func (tc TrxController) Get(c *gin.Context) {
 		return
 	}
 
-	trxs, err := tc.service.Get(c, userID.(uint))
+	trxs, err := tc.service.List(c, userID.(uint))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error":       "Failed to get transaction",
