@@ -48,7 +48,7 @@ func (bc BudgetController) Get(c *gin.Context) {
 		return
 	}
 
-	budgets, err := bc.service.Get(c, userID.(uint))
+	budgets, err := bc.service.List(userID.(uint))
 	// TODO: Улучшить обработку ошибок
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

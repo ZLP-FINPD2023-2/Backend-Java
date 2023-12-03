@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	"finapp/domains"
@@ -27,7 +26,7 @@ func (s BudgetService) WithTrx(trxHandle *gorm.DB) domains.BudgetService {
 	return s
 }
 
-func (s BudgetService) Get(c *gin.Context, userID uint) ([]models.Budget, error) {
+func (s BudgetService) List(userID uint) ([]models.Budget, error) {
 	var budgets []models.Budget
 
 	// Создание запроса
