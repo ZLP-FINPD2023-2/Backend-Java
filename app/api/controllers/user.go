@@ -7,25 +7,26 @@ import (
 
 	"finapp/domains"
 	"finapp/lib"
+	"finapp/models"
 )
 
 // UserController struct
 type UserController struct {
 	logger      lib.Logger
-	service     domains.AuthService
-	userService domains.UserService
+	service     domains.UserService
+	authService domains.AuthService
 }
 
 // NewUserController creates new controller
 func NewUserController(
 	logger lib.Logger,
-	service domains.AuthService,
-	userService domains.UserService,
+	service domains.UserService,
+	userService domains.AuthService,
 ) UserController {
 	return UserController{
 		logger:      logger,
 		service:     service,
-		userService: userService,
+		authService: userService,
 	}
 }
 
@@ -40,7 +41,28 @@ func NewUserController(
 //	@Produce		json
 //	@Router			/user [delete]
 func (uc UserController) Delete(c *gin.Context) {
-	c.Status(http.StatusNotImplemented)
+	// Парсинг запроса
+	userId, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
+		})
+		return
+	}
+
+	// Удаление пользователя
+	if err := uc.service.Delete(userId.(uint)); err != nil {
+		// Необработанные ошибки
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to delete user",
+		})
+		return
+	}
+
+	// Отправка ответа
+	c.JSON(http.StatusNoContent, gin.H{
+		"message": "User deleted successfully",
+	})
 }
 
 // Получение
@@ -54,7 +76,32 @@ func (uc UserController) Delete(c *gin.Context) {
 //	@Produce		json
 //	@Router			/user [get]
 func (uc UserController) Get(c *gin.Context) {
-	c.Status(http.StatusNotImplemented)
+	userID, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
+		})
+		return
+	}
+
+	user, err := uc.service.Get(userID.(uint))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to get user",
+		})
+		return
+	}
+
+	response := models.GetResponse{
+		Email:      user.Email,
+		First_name: user.FirstName,
+		Last_name:  user.LastName,
+		Patronymic: user.Patronymic,
+		Gender:     user.Gender,
+		Birthday:   user.Birthday.Format(models.DateFormat),
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 // Обновление

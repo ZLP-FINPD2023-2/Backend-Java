@@ -1,8 +1,9 @@
 package services
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 
 	"finapp/domains"
 	"finapp/lib"
@@ -55,12 +56,18 @@ func (s UserService) GetUserByEmail(email *string) (models.User, error) {
 	return user, err
 }
 
+func (s UserService) Get(id uint) (models.User, error) {
+	var user models.User
+	err := s.repository.First(&user, id).Error
+	return user, err
+}
+
 // UpdateUser updates the user
 //func (s UserService) UpdateUser(user models.User) error {
 //	return s.repository.Save(&user).Error
 //}
 
-// DeleteUser deletes the user
-//func (s UserService) DeleteUser(id uint) error {
-//	return s.repository.Delete(&models.User{}, id).Error
-//}
+// Delete deletes the user
+func (s UserService) Delete(id uint) error {
+	return s.repository.Delete(&models.User{}, id).Error
+}
