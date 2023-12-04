@@ -1,11 +1,12 @@
 package models
 
 import (
-	"github.com/go-playground/validator/v10"
+	"time"
+
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
-	"time"
+	"finapp/lib/validators"
 )
 
 type Gender string
@@ -31,14 +32,9 @@ func (u User) TableName() string {
 	return "users"
 }
 
-func (u User) customValidator() *validator.Validate {
-	v := validator.New()
-	return v
-}
-
 func (user *User) BeforeSave(tx *gorm.DB) error {
 	// Валидация
-	validate := user.customValidator()
+	validate := validators.CustomValidator()
 	if err := validate.Struct(user); err != nil {
 		return err
 	}
