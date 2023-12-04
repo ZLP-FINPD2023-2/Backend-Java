@@ -105,6 +105,7 @@ func (gc GoalController) Create(c *gin.Context) {
 		})
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Goal added successfully",
 	})
