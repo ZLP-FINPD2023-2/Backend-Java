@@ -8,4 +8,5 @@ var Module = fx.Options(
 	fx.Provide(NewUserController),
 	fx.Provide(NewTrxController),
 	fx.Provide(NewBudgetController),
+	fx.Provide(NewGoalController),
 )
