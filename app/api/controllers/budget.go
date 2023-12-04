@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"finapp/constants"
 	"finapp/domains"
 	"finapp/lib"
 	"finapp/models"
@@ -40,7 +41,7 @@ func NewBudgetController(
 //	@Success		200	{array}	models.BudgetGetResponse
 //	@Router			/budget [get]
 func (bc BudgetController) Get(c *gin.Context) {
-	userID, ok := c.Get("userID")
+	userID, ok := c.Get(constants.UserID)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get user",
@@ -90,7 +91,7 @@ func (bc BudgetController) Post(c *gin.Context) {
 		return
 	}
 
-	userID, ok := c.Get("userID")
+	userID, ok := c.Get(constants.UserID)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get user",

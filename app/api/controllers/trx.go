@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"finapp/constants"
 	"finapp/domains"
 	"finapp/lib"
 	"finapp/models"
@@ -42,7 +43,7 @@ func NewTrxController(
 //	@Success		200			{array}	models.TrxResponse
 //	@Router			/trx [get]
 func (tc TrxController) List(c *gin.Context) {
-	userID, ok := c.Get("userID")
+	userID, ok := c.Get(constants.UserID)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get user",
@@ -94,7 +95,7 @@ func (tc TrxController) Post(c *gin.Context) {
 		return
 	}
 
-	userID, ok := c.Get("userID")
+	userID, ok := c.Get(constants.UserID)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get user",

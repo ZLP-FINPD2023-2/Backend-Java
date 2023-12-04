@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"finapp/constants"
 	"finapp/domains"
 	"finapp/lib"
 )
@@ -62,7 +63,7 @@ func (m JWTAuthMiddleware) Handler() gin.HandlerFunc {
 						"error": err.Error(),
 					})
 				}
-				c.Set("userID", claims.User.ID)
+				c.Set(constants.UserID, claims.UserID)
 				c.Next()
 				return
 			}
