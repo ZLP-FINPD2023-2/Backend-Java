@@ -2,8 +2,6 @@ package models
 
 import "github.com/dgrijalva/jwt-go"
 
-const DateFormat = "02-01-2006"
-
 type TokenClaims struct {
 	UserID uint `json:"user_id"`
 	jwt.StandardClaims
