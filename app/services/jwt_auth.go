@@ -55,7 +55,7 @@ func (s JWTAuthService) CreateToken(user *models.User) (string, error) {
 	tokenExp := unixTime + 60*15
 
 	claims := models.TokenClaims{
-		User: user,
+		UserID: user.ID,
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  unixTime,
 			ExpiresAt: tokenExp,

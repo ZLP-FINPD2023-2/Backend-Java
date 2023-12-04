@@ -5,7 +5,7 @@ import "github.com/dgrijalva/jwt-go"
 const DateFormat = "02-01-2006"
 
 type TokenClaims struct {
-	User *User `json:"user"`
+	UserID uint `json:"user_id"`
 	jwt.StandardClaims
 }
 
