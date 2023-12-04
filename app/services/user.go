@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
+	"finapp/constants"
 	"finapp/domains"
 	"finapp/lib"
 	"finapp/models"
@@ -33,7 +34,7 @@ func (s UserService) WithTrx(trxHandle *gorm.DB) domains.UserService {
 
 // Register call to register the user
 func (s UserService) Register(q *models.RegisterRequest) error {
-	birthday, err := time.Parse(models.DateFormat, q.Birthday)
+	birthday, err := time.Parse(constants.DateFormat, q.Birthday)
 	if err != nil {
 		return err
 	}

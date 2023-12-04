@@ -99,7 +99,7 @@ func (uc UserController) Get(c *gin.Context) {
 		Last_name:  user.LastName,
 		Patronymic: user.Patronymic,
 		Gender:     user.Gender,
-		Birthday:   user.Birthday.Format(models.DateFormat),
+		Birthday:   user.Birthday.Format(constants.DateFormat),
 	}
 
 	c.JSON(http.StatusOK, response)
