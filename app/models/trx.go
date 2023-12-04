@@ -9,22 +9,6 @@ import (
 	"finapp/lib/validators"
 )
 
-type TrxResponse struct {
-	Title      string          `json:"title"`
-	Date       time.Time       `json:"date"`
-	Amount     decimal.Decimal `json:"amount"`
-	BudgetFrom uint            `validate:"required"`
-	BudgetTo   uint            `validate:"required"`
-}
-
-type TrxRequest struct {
-	Title      string `json:"title"`
-	Date       string `json:"date"`
-	Amount     string `json:"amount"`
-	BudgetFrom uint   `json:"from" validate:"required"`
-	BudgetTo   uint   `json:"to" validate:"required"`
-}
-
 type Trx struct {
 	gorm.Model
 	UserID     uint            `validate:"required"`
@@ -47,4 +31,20 @@ func (trx *Trx) BeforeSave(db *gorm.DB) error {
 	}
 
 	return nil
+}
+
+type TrxResponse struct {
+	Title      string          `json:"title"`
+	Date       time.Time       `json:"date"`
+	Amount     decimal.Decimal `json:"amount"`
+	BudgetFrom uint            `validate:"required"`
+	BudgetTo   uint            `validate:"required"`
+}
+
+type TrxRequest struct {
+	Title      string `json:"title"`
+	Date       string `json:"date"`
+	Amount     string `json:"amount"`
+	BudgetFrom uint   `json:"from" validate:"required"`
+	BudgetTo   uint   `json:"to" validate:"required"`
 }

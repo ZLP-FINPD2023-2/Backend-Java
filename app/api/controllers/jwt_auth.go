@@ -74,7 +74,7 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 	}
 
 	// Получение токена
-	token, err := jwt.service.CreateToken(&user)
+	token, err := jwt.service.CreateToken(user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to create token",

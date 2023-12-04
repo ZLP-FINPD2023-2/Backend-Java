@@ -41,7 +41,7 @@ func (s TrxService) List(c *gin.Context, userID uint) ([]models.Trx, error) {
 	var trxs []models.Trx
 
 	// Создание запроса
-	query := s.repository.Where("user_id = ?", userID)
+	query := s.repository.Database.Where("user_id = ?", userID)
 
 	// Фильтрация запроса
 	/* TODO: Реализовать фильтрацию по сумме
@@ -115,5 +115,5 @@ func (s TrxService) Create(trxRequest *models.TrxRequest, userID uint) error {
 		BudgetFrom: trxRequest.BudgetFrom,
 	}
 
-	return s.repository.Create(&transaction).Error
+	return s.repository.Create(&transaction)
 }
