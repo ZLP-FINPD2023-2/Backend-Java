@@ -33,3 +33,9 @@ func (r GoalRepository) Get(id, userID uint) (models.Goal, error) {
 	err := r.Database.Where("user_id = ?", userID).Where("id = ?", id).First(&goal).Error
 	return goal, err
 }
+
+func (r GoalRepository) List(userID uint) ([]models.Goal, error) {
+	var goals []models.Goal
+	err := r.Database.Where("user_id = ?", userID).Find(&goals).Error
+	return goals, err
+}

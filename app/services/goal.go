@@ -32,11 +32,7 @@ func (s GoalService) WithTrx(trxHandle *gorm.DB) domains.GoalService {
 func (s GoalService) List(userID uint) ([]models.Goal, error) {
 	var goals []models.Goal
 
-	// Создание запроса
-	query := s.repository.Database.Where("user_id = ?", userID)
-
-	// Выполнение запроса
-	err := query.Find(&goals).Error
+	goals, err := s.repository.List(userID)
 
 	return goals, err
 }
