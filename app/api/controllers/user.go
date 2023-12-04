@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"finapp/constants"
 	"finapp/domains"
 	"finapp/lib"
 	"finapp/models"
@@ -42,7 +43,7 @@ func NewUserController(
 //	@Router			/user [delete]
 func (uc UserController) Delete(c *gin.Context) {
 	// Парсинг запроса
-	userId, ok := c.Get("userID")
+	userId, ok := c.Get(constants.UserID)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get user",
@@ -76,7 +77,7 @@ func (uc UserController) Delete(c *gin.Context) {
 //	@Produce		json
 //	@Router			/user [get]
 func (uc UserController) Get(c *gin.Context) {
-	userID, ok := c.Get("userID")
+	userID, ok := c.Get(constants.UserID)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get user",
@@ -98,7 +99,7 @@ func (uc UserController) Get(c *gin.Context) {
 		Last_name:  user.LastName,
 		Patronymic: user.Patronymic,
 		Gender:     user.Gender,
-		Birthday:   user.Birthday.Format(models.DateFormat),
+		Birthday:   user.Birthday.Format(constants.DateFormat),
 	}
 
 	c.JSON(http.StatusOK, response)

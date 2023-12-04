@@ -11,6 +11,7 @@ import (
 
 	"finapp/domains"
 	"finapp/lib"
+	"finapp/lib/validators"
 	"finapp/models"
 )
 
@@ -73,7 +74,7 @@ func (jwt JWTAuthController) Login(c *gin.Context) {
 	}
 
 	// Получение токена
-	token, err := jwt.service.CreateToken(&user)
+	token, err := jwt.service.CreateToken(user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to create token",
@@ -113,9 +114,8 @@ func (jwt JWTAuthController) Register(c *gin.Context) {
 		var vErr validator.ValidationErrors
 		if errors.As(err, &vErr) {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": lib.ParseValidationErrors(vErr),
-			},
-			)
+				"error": validators.ParseValidationErrors(vErr),
+			})
 			return
 		}
 

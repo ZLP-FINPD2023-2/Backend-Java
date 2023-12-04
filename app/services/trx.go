@@ -7,6 +7,7 @@ import (
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 
+	"finapp/constants"
 	"finapp/domains"
 	"finapp/lib"
 	"finapp/models"
@@ -40,7 +41,7 @@ func (s TrxService) List(c *gin.Context, userID uint) ([]models.Trx, error) {
 	var trxs []models.Trx
 
 	// Создание запроса
-	query := s.repository.Where("user_id = ?", userID)
+	query := s.repository.Database.Where("user_id = ?", userID)
 
 	// Фильтрация запроса
 	/* TODO: Реализовать фильтрацию по сумме
@@ -63,7 +64,7 @@ func (s TrxService) List(c *gin.Context, userID uint) ([]models.Trx, error) {
 	*/
 
 	if dateFromStr := c.Query("date_from"); dateFromStr != "" {
-		dateFrom, err := time.Parse(models.DateFormat, dateFromStr)
+		dateFrom, err := time.Parse(constants.DateFormat, dateFromStr)
 		if err != nil {
 			return nil, err
 		}
@@ -71,7 +72,7 @@ func (s TrxService) List(c *gin.Context, userID uint) ([]models.Trx, error) {
 	}
 
 	if dateToStr := c.Query("date_to"); dateToStr != "" {
-		dateTo, err := time.Parse(models.DateFormat, dateToStr)
+		dateTo, err := time.Parse(constants.DateFormat, dateToStr)
 		if err != nil {
 			return nil, err
 		}
@@ -85,7 +86,7 @@ func (s TrxService) List(c *gin.Context, userID uint) ([]models.Trx, error) {
 }
 
 func (s TrxService) Create(trxRequest *models.TrxRequest, userID uint) error {
-	date, err := time.Parse(models.DateFormat, trxRequest.Date)
+	date, err := time.Parse(constants.DateFormat, trxRequest.Date)
 	if err != nil {
 		return err
 	}
@@ -114,5 +115,5 @@ func (s TrxService) Create(trxRequest *models.TrxRequest, userID uint) error {
 		BudgetFrom: trxRequest.BudgetFrom,
 	}
 
-	return s.repository.Create(&transaction).Error
+	return s.repository.Create(&transaction)
 }

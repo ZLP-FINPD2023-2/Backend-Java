@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
+
+	"finapp/lib/validators"
 )
 
 type Budget struct {
@@ -16,14 +17,9 @@ func (b Budget) TableName() string {
 	return "budgets"
 }
 
-func (b Budget) customValidator() *validator.Validate {
-	v := validator.New()
-	return v
-}
-
 func (b *Budget) BeforeSave(db *gorm.DB) error {
 	// Валидация
-	validate := b.customValidator()
+	validate := validators.CustomValidator()
 	if err := validate.Struct(b); err != nil {
 		return err
 	}
