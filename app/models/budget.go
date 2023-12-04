@@ -9,6 +9,7 @@ type Budget struct {
 	gorm.Model
 	UserID uint   `validate:"required"`
 	Title  string `validate:"required" gorm:"unique"`
+	Goal   uint
 }
 
 func (b Budget) TableName() string {
@@ -32,9 +33,11 @@ func (b *Budget) BeforeSave(db *gorm.DB) error {
 
 type BudgetCreateRequest struct {
 	Title string `json:"title"`
+	Goal  uint   `json:"goal"`
 }
 
 type BudgetGetResponse struct {
 	Title string `json:"title"`
 	ID    uint   `json:"id"`
+	Goal  uint   `json:"goal"`
 }
