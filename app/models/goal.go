@@ -1,7 +1,8 @@
 package models
 
 import (
-	"github.com/go-playground/validator/v10"
+	"finapp/lib/validators"
+
 	"gorm.io/gorm"
 )
 
@@ -15,14 +16,9 @@ func (m Goal) TableName() string {
 	return "goals"
 }
 
-func (m Goal) customValidator() *validator.Validate {
-	v := validator.New()
-	return v
-}
-
 func (m *Goal) BeforeSave(db *gorm.DB) error {
 	// Валидация
-	validate := m.customValidator()
+	validate := validators.CustomValidator()
 	if err := validate.Struct(m); err != nil {
 		return err
 	}
