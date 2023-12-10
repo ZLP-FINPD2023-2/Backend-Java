@@ -8,6 +8,6 @@ import (
 
 type BudgetService interface {
 	WithTrx(trxHandle *gorm.DB) BudgetService
-	List(userID uint) ([]models.Budget, error)
+	List(userID uint) ([]models.BudgetCalc, error)
 	Create(request *models.BudgetCreateRequest, userID uint) error
 }

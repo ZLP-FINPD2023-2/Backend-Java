@@ -8,6 +8,6 @@ import (
 
 type GoalService interface {
 	WithTrx(trxHandle *gorm.DB) GoalService
-	List(userID uint) ([]models.Goal, error)
+	List(userID uint) ([]models.GoalCalc, error)
 	Create(request *models.GoalCreateRequest, userID uint) error
 }

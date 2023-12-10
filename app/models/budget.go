@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 
 	"finapp/lib/validators"
@@ -11,6 +12,14 @@ type Budget struct {
 	UserID uint   `validate:"required"`
 	Title  string `validate:"required" gorm:"unique"`
 	Goal   uint
+}
+
+type BudgetCalc struct {
+	gorm.Model
+	UserID uint   `validate:"required"`
+	Title  string `validate:"required" gorm:"unique"`
+	Goal   uint
+	Amount decimal.Decimal `validate:"required" sql:"type:decimal(20,2);"`
 }
 
 func (b Budget) TableName() string {
@@ -33,7 +42,8 @@ type BudgetCreateRequest struct {
 }
 
 type BudgetGetResponse struct {
-	Title string `json:"title"`
-	ID    uint   `json:"id"`
-	Goal  uint   `json:"goal"`
+	Title  string          `json:"title"`
+	ID     uint            `json:"id"`
+	Goal   uint            `json:"goal"`
+	Amount decimal.Decimal `json:"amount"`
 }
