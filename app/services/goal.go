@@ -29,9 +29,7 @@ func (s GoalService) WithTrx(trxHandle *gorm.DB) domains.GoalService {
 	return s
 }
 
-func (s GoalService) List(userID uint) ([]models.Goal, error) {
-	var goals []models.Goal
-
+func (s GoalService) List(userID uint) ([]models.GoalCalc, error) {
 	goals, err := s.repository.List(userID)
 
 	return goals, err

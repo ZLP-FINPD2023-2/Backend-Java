@@ -32,15 +32,8 @@ func (s BudgetService) WithTrx(trxHandle *gorm.DB) domains.BudgetService {
 	return s
 }
 
-func (s BudgetService) List(userID uint) ([]models.Budget, error) {
-	var budgets []models.Budget
-
-	// Создание запроса
-	query := s.repository.Database.Where("user_id = ?", userID)
-
-	// Выполнение запроса
-	err := query.Find(&budgets).Error
-
+func (s BudgetService) List(userID uint) ([]models.BudgetCalc, error) {
+	budgets, err := s.repository.List(userID)
 	return budgets, err
 }
 

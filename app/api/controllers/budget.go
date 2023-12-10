@@ -31,15 +31,15 @@ func NewBudgetController(
 
 // Получение
 
-//	@Security		ApiKeyAuth
-//	@summary		Get budgets
-//	@tags			budget
-//	@Description	Получение бюджетов
-//	@ID				budget-get
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{array}	models.BudgetGetResponse
-//	@Router			/budget [get]
+// @Security		ApiKeyAuth
+// @summary		Get budgets
+// @tags			budget
+// @Description	Получение бюджетов
+// @ID				budget-get
+// @Accept			json
+// @Produce		json
+// @Success		200	{array}	models.BudgetGetResponse
+// @Router			/budget [get]
 func (bc BudgetController) Get(c *gin.Context) {
 	userID, ok := c.Get(constants.UserID)
 	if !ok {
@@ -62,8 +62,9 @@ func (bc BudgetController) Get(c *gin.Context) {
 	var budgetResponses []models.BudgetGetResponse
 	for _, budget := range budgets {
 		budgetResponses = append(budgetResponses, models.BudgetGetResponse{
-			Title: budget.Title,
-			ID:    budget.ID,
+			Title:  budget.Title,
+			ID:     budget.ID,
+			Amount: budget.Amount,
 		})
 	}
 
@@ -72,15 +73,15 @@ func (bc BudgetController) Get(c *gin.Context) {
 
 // Создание
 
-//	@Security		ApiKeyAuth
-//	@summary		Create budget
-//	@tags			budget
-//	@Description	Создание бюджета
-//	@ID				budget-create
-//	@Accept			json
-//	@Produce		json
-//	@Param			budget	body	models.BudgetCreateRequest	true	"Данные бюждета"
-//	@Router			/budget [post]
+// @Security		ApiKeyAuth
+// @summary		Create budget
+// @tags			budget
+// @Description	Создание бюджета
+// @ID				budget-create
+// @Accept			json
+// @Produce		json
+// @Param			budget	body	models.BudgetCreateRequest	true	"Данные бюждета"
+// @Router			/budget [post]
 func (bc BudgetController) Post(c *gin.Context) {
 	var budget models.BudgetCreateRequest
 
