@@ -25,10 +25,12 @@ tasks:
           DOCKER_COMPOSE_FILE: "{{.PROD_FILE}}"
 
   serve-dev:
+    dotenv: ['.dev.env']
     cmds:
       - docker compose -f {{.DEV_FILE}} up
 
   serve-prod:
+    dotenv: ['.prod.env', '.prod.db.env']
     cmds:
       - docker compose -f {{.PROD_FILE}} up -d --pull always
       - task: prune
