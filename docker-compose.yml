@@ -1,15 +1,16 @@
+---
 version: '3.8'
 name: backend-dev
 
 services:
   web:
-    build:
-      context: ./app
-      dockerfile: docker/Dockerfile
-    ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
     env_file:
       - .env
+    build:
+      context: ./app
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
     depends_on:
       - db
 

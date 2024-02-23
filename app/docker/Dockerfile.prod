@@ -3,7 +3,7 @@
 ###########
 
 # Скачивание образа
-FROM golang as builder
+FROM golang:alpine as builder
 
 # Установка рабочей директории
 WORKDIR /usr/src/finapp
@@ -13,23 +13,20 @@ ENV CGO_ENABLED 0
 ENV GOOS linux
 
 # Установка зависимостей
-RUN go install github.com/swaggo/swag/cmd/swag@latest
-COPY go.mod go.sum ./
-RUN go mod download && go mod verify
+RUN go install github.com/go-task/task/v3/cmd/task@latest
 
 # Копирование проекта
 COPY . ./
 
-# Сборка
-RUN swag init -g server.go
-RUN go build -v -o /usr/local/bin/app ./server.go
+# Установка приложения
+RUN task install
 
 #########
 # FINAL #
 #########
 
 # Скачивание образа
-FROM alpine
+FROM alpine:3
 
 # Создание директории для пользователя app
 RUN mkdir -p /home/app
@@ -45,15 +42,11 @@ WORKDIR $APP_HOME
 
 # Копирование entrypoint.sh
 COPY docker/entrypoint.sh $APP_HOME
-RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.sh
-RUN chmod +x $APP_HOME/entrypoint.sh
+RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.sh && chmod +x $APP_HOME/entrypoint.sh
 
-# Установка приложения
-COPY --from=builder /usr/local/bin/app $APP_HOME
-RUN chmod +x $APP_HOME/app
-
-# Передача владения файлами пользовалелю app
-RUN chown -R app:app $APP_HOME
+# Установка приложения и передача владения файлами пользовалелю app
+COPY --from=builder /usr/local/bin/finapp $APP_HOME
+RUN chmod +x $APP_HOME/finapp && chown -R app:app $APP_HOME
 
 # Смена пользователя
 USER app
