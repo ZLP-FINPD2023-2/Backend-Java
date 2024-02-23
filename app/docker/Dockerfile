@@ -1,22 +1,32 @@
-# Скачивание образа
-FROM golang:alpine
+# CACHE
+FROM gradle:jdk17-alpine AS cache
+ENV GRADLE_USER_HOME=/home/gradle/cache_home
+ENV CODE_DIR=/home/gradle/java-code
+RUN mkdir -p ${GRADLE_USER_HOME}
+COPY ./build.gradle.kts ./settings.gradle.kts ${CODE_DIR}/
+WORKDIR ${CODE_DIR}
+RUN gradle clean build -i --stacktrace -x bootJar
 
-# Установка рабочей директории
-WORKDIR /usr/src/finapp
+# BUILDER
+FROM gradle:jdk17-alpine AS builder
+ENV SRC_DIR=/usr/src/java-code
+ENV CACHE_HOME=/home/gradle/cache_home
+COPY --from=cache ${CACHE_HOME} /home/gradle/.gradle
+COPY ./settings.gradle.kts ./build.gradle.kts ${SRC_DIR}/
+COPY ./src ${SRC_DIR}/src
+COPY ./gradle ${SRC_DIR}/gradle
+WORKDIR ${SRC_DIR}/
+RUN gradle bootJar -i --stacktrace
 
-# Установка зависимостей
-RUN go install github.com/go-task/task/v3/cmd/task@latest
+# RUNNER
+FROM openjdk:17-alpine
+WORKDIR /usr/src/java-app
+ENV SRC_DIR=/usr/src/java-code
 
-# Копирование проекта
-COPY . ./
+COPY --from=builder ${SRC_DIR}/build/libs/*.jar ./app.jar
 
-# Установка приложения
-RUN task install
+COPY ./entrypoint.sh /usr/bin/
+RUN apk add --update --no-cache netcat-openbsd
 
-# Копирование entrypoint.sh
-COPY docker/entrypoint.sh /usr/local/bin
-#RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# Запуск
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["finapp", "app:serve"]
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+CMD ["java", "-jar", "app.jar"]

@@ -12,25 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup go
-        uses: actions/setup-go@v4
+      - uses: actions/setup-java@v3
         with:
-          go-version: '1.21'
+          java-version: '17'
+          distribution: 'temurin'
 
-      - name: Install Task
-        uses: arduino/setup-task@v1
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-      - name: Install deps
-        run: |
-          task app:deps
-
-      - name: Build
-        run: |
-          task app:build
-
-      - name: Test
-        run: |
-          task app:test
+      - name: Build with Gradle
+        run: cd app && gradle clean build -i --stacktrace
