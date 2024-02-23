@@ -5,20 +5,17 @@ FROM golang:alpine
 WORKDIR /usr/src/finapp
 
 # Установка зависимостей
-RUN go install github.com/swaggo/swag/cmd/swag@latest
-COPY go.mod go.sum ./
-RUN go mod download && go mod verify
+RUN go install github.com/go-task/task/v3/cmd/task@latest
 
 # Копирование проекта
 COPY . ./
 
-# Сборка
-RUN swag init -g server.go
-RUN go build -v -o /usr/local/bin/finapp ./server.go
+# Установка приложения
+RUN task install
 
 # Копирование entrypoint.sh
 COPY docker/entrypoint.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/entrypoint.sh
+#RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Запуск
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

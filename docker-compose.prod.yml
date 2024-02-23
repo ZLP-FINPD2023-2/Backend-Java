@@ -1,15 +1,19 @@
+---
 version: '3.8'
 name: backend
 
 services:
   web:
-    image: ghcr.io/zlp-finpd2023-2/backend:dev
-    command: ./app app:serve
-    ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
     env_file:
       - .env.prod
       - .env.prod.db
+    image: ghcr.io/zlp-finpd2023-2/backend:dev
+    build:
+      context: ./app
+      dockerfile: ./docker/Dockerfile.prod
+    command: ./finapp app:serve
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
     depends_on:
       - db
 
