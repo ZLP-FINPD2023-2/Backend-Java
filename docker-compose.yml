@@ -1,11 +1,12 @@
 ---
-version: '3.8'
+version: '3.9'
 name: backend-dev
 
 services:
   web:
     env_file:
-      - .env
+      - path: .dev.env
+        required: true
     build:
       context: ./app
       dockerfile: ./docker/Dockerfile
@@ -19,7 +20,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env
+      - path: .dev.env
+        required: true
 
 volumes:
   postgres_data:
