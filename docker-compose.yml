@@ -4,23 +4,23 @@ name: backend-dev
 
 services:
   web:
-    env_file:
-      - path: .dev.env
-        required: true
     build:
       context: ./app
       dockerfile: ./docker/Dockerfile
     ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
+      - 8080:8080
     depends_on:
       - db
+    env_file:
+      - path: ./envs/dev.env
+        required: true
 
   db:
     image: postgres:alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - path: .dev.env
+      - path: ./envs/dev.env
         required: true
 
 volumes:

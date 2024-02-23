@@ -4,25 +4,22 @@ name: backend
 
 services:
   web:
-    env_file:
-      - path: .prod.env
-        required: true
-      - path: .prod.db.env
-        required: true
     image: ghcr.io/zlp-finpd2023-2/backend:dev
     build:
       context: ./app
-      dockerfile: ./docker/Dockerfile.prod
-    command: ./finapp app:serve
+      dockerfile: ./docker/Dockerfile
     ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
+      - 8080:8080
     depends_on:
       - db
+    env_file:
+      - path: ./envs/dev.env
+        required: true
 
   db:
     image: postgres:alpine
     volumes:
       - ./data/db:/var/lib/postgresql/data/
     env_file:
-      - path: .prod.db.env
+      - path: ./envs/dev.env
         required: true
