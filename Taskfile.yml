@@ -1,0 +1,7 @@
+---
+version: '3'
+
+includes:
+  docker:
+    taskfile: ./taskfiles/Docker.yml
+    dir: .

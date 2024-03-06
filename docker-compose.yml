@@ -1,0 +1,28 @@
+---
+version: '3'
+name: backend
+
+services:
+  web:
+    image: ghcr.io/zlp-finpd2023-2/backend:dev
+    build:
+      context: ./app
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    env_file:
+      - path: .env
+        required: true
+
+  db:
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - path: .env
+        required: true
+
+volumes:
+  postgres_data:
