@@ -1,0 +1,11 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.global.db.host }}
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+  ports:
+    - port: {{ .Values.global.db.port }}
+      targetPort: db

@@ -1,2 +1,11 @@
 ---
-nodePort: 31000
+global:
+  app:
+    port: 8080
+    nodePort: 31000
+  db:
+    user: admin
+    password: password
+    name: postgres
+    host: db
+    port: 5432

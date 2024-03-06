@@ -1,0 +1,3 @@
+---
+replicas: 1
+image: registry.zlp-cloud.ru/lfp-backend:dev
