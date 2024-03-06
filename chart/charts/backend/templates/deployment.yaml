@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: {{ .Chart.Name }}
-        image: {{ .Values.image }}
+        image: {{ .Values.global.app.image }}
         imagePullPolicy: Always
         resources:
           limits:

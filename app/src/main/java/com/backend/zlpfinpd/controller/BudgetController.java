@@ -17,7 +17,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/budget")
+@RequestMapping("/api/v2/budget")
 public class BudgetController {
     private final BudgetService budgetService;
 
