@@ -1,6 +1,7 @@
 ---
 global:
   app:
+    image: ghcr.io/zlp-finpd2023-2/backend-java:dev
     port: 8080
     nodePort: 31000
   db:
