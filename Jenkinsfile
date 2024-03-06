@@ -1,19 +1,16 @@
-pipeline { 
-    agent any 
-    stages {
-        stage('Build') { 
-            steps { 
-                sh "echo 'building..'"
-            }
-        }
-        stage('Test'){
-            steps {
-                sh "echo 'Testing...'" 
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh "echo 'Deploying...'"
+podTemplate(containers: [
+    containerTemplate(name: 'gradle', image: 'gradle:jdk17', command: 'sleep', args: '99d'),
+  ]) {
+
+    node(POD_LABEL) {
+        stage('Checkout') {
+            checkout scm 
+            container('gradle') {
+                stage('Build') {
+                    dir("app") {
+                        sh './gradlew clean build'
+                    }
+                }
             }
         }
     }
