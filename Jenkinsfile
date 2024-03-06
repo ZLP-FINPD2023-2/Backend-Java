@@ -6,11 +6,21 @@ podTemplate(containers: [
         stage('Checkout') {
             checkout scm 
             container('gradle') {
+
                 stage('Build') {
                     dir("app") {
                         sh './gradlew clean build'
                     }
                 }
+
+                stage('Deploy check') {
+                    input "Deploy?"
+                }
+
+                stage('Deploy') {
+                    echo 'Deploy'
+                }
+
             }
         }
     }
