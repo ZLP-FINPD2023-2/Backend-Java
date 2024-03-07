@@ -1,27 +1,53 @@
-podTemplate(containers: [
-    containerTemplate(name: 'gradle', image: 'gradle:jdk17', command: 'sleep', args: '99d'),
-  ]) {
-
-    node(POD_LABEL) {
-        stage('Checkout') {
-            checkout scm 
-            container('gradle') {
-
-                stage('Build') {
-                    dir("app") {
-                        sh './gradlew clean build'
-                    }
-                }
-
-                stage('Deploy check') {
-                    input "Deploy?"
-                }
-
-                stage('Deploy') {
-                    echo 'Deploy'
-                }
-
-            }
-        }
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer 'jnlp'
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: jenkins
+spec:
+  containers:
+  - name: gradle
+    image: gradle:jdk17
+    command:
+    - cat
+    tty: true
+"""
     }
+  }
+
+  options {
+    skipDefaultCheckout()
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build') {
+      steps {
+        container('gradle'){
+          dir("app") {
+            sh './gradlew clean build'
+          }
+        }
+      }
+    }
+
+    stage('Deploy') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Deploy'
+      }
+    }
+  }
+
 }
