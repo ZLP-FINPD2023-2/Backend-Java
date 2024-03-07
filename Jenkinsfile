@@ -1,21 +1,12 @@
 pipeline {
   agent {
     kubernetes {
-      defaultContainer 'jnlp'
-      yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    app: jenkins
-spec:
-  containers:
-  - name: gradle
-    image: gradle:jdk17
-    command:
-    - cat
-    tty: true
-"""
+      containerTemplate {
+        name 'gradle'
+        image 'gradle:jdk17'
+        command 'cat'
+        ttyEnabled true
+      }
     }
   }
 
