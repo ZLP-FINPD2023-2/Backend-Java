@@ -23,14 +23,8 @@ pipeline {
       }
       steps {
         container('gradle'){
-          sh 'pwd'
-          sh 'ls -la'
           dir('app') {
-            sh 'pwd'
-            sh 'ls -la'
             sh './gradlew clean build'
-            sh 'pwd'
-            sh 'ls -la'
           }
         }
       }
