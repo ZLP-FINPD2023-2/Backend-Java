@@ -1,10 +1,56 @@
+node {
+  checkout scm
+}
+
 pipeline {
-  agent { kubernetes {} }
+  agent {
+    kubernetes {
+      yaml '''
+      spec:
+        containers:
+        - name: docker
+          image: docker:latest
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          command:
+          - cat
+          tty: true
+          volumeMounts:
+          - mountPath: /var/run/docker.sock
+            name: docker-sock
+        - name: helm
+          image: ibmcom/k8s-helm:v2.6.0
+          command: ['cat']
+          tty: true
+        volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+      '''
+    }
+  }
 
   stages {
-    stage('Checkout') {
+    stage('Build image') {
       steps {
-        checkout scm
+        container('docker') {
+          sh 'docker build -t registry.zlp-cloud.ru/backend-java:${BRANCH_NAME} -f ./app/docker/Dockerfile ./app'
+        }
+      }
+    }
+
+    stage('Push image') {
+      when {
+        anyOf {
+          branch 'master'
+          branch 'dev'
+        }
+      }
+      steps {
+        container('docker') {
+          sh 'docker push registry.zlp-cloud.ru/backend-java:${BRANCH_NAME}'
+        }
       }
     }
 
@@ -15,63 +61,14 @@ pipeline {
           branch 'dev'
         }
       }
-
-      agent {
-        kubernetes {
-          yaml '''
-          spec:
-            containers:
-            - name: helm
-              image: ibmcom/k8s-helm:v2.6.0
-              command: ['cat']
-              tty: true
-            - name: docker
-              image: docker:latest
-              securityContext:
-                privileged: true
-                runAsUser: 0
-              command:
-              - cat
-              tty: true
-              volumeMounts:
-              - mountPath: /var/run/docker.sock
-                name: docker-sock
-            volumes:
-            - name: docker-sock
-              hostPath:
-                path: /var/run/docker.sock
-          '''
-        }
+      options {
+        timeout(time: 1, unit: 'MINUTES')
       }
-
-      stages {
-        stage('Build image') {
-          steps {
-            container('docker') {
-              sh 'docker build -t registry.zlp-cloud.ru/backend-java:${BRANCH_NAME} -f ./app/docker/Dockerfile ./app'
-            }
-          }
-        }
-
-        stage('Push image') {
-          steps {
-            container('docker') {
-              sh 'docker push registry.zlp-cloud.ru/backend-java:${BRANCH_NAME}'
-            }
-          }
-        }
-
-        stage('Deploy') {
-          options {
-            timeout(time: 1, unit: 'MINUTES')
-          }
-          steps {
-            container('helm') {
-              dir('chart') {
-                sh 'helm version'
-                sh 'helm upgrade --install --namespace lfp-dev backend .'
-              }
-            }
+      steps {
+        container('helm') {
+          dir('chart') {
+            sh 'helm version'
+            sh 'helm upgrade --install --namespace lfp-dev backend .'
           }
         }
       }
