@@ -4,12 +4,11 @@ name: backend
 
 services:
   web:
-    image: ghcr.io/zlp-finpd2023-2/backend:dev
     build:
       context: ./app
       dockerfile: ./docker/Dockerfile
     ports:
-      - 8080:8080
+      - ${SERVER_PORT}:${SERVER_PORT}
     depends_on:
       - db
     env_file:

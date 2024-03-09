@@ -1,5 +1,5 @@
 # CACHE
-FROM gradle:jdk17-alpine AS cache
+FROM docker.io/gradle:jdk17-alpine AS cache
 ENV GRADLE_USER_HOME=/home/gradle/cache_home
 ENV CODE_DIR=/home/gradle/java-code
 RUN mkdir -p ${GRADLE_USER_HOME}
@@ -8,7 +8,7 @@ WORKDIR ${CODE_DIR}
 RUN gradle clean build -i --stacktrace -x bootJar
 
 # BUILDER
-FROM gradle:jdk17-alpine AS builder
+FROM docker.io/gradle:jdk17-alpine AS builder
 ENV SRC_DIR=/usr/src/java-code
 ENV CACHE_HOME=/home/gradle/cache_home
 COPY --from=cache ${CACHE_HOME} /home/gradle/.gradle
@@ -19,7 +19,7 @@ WORKDIR ${SRC_DIR}/
 RUN gradle bootJar -i --stacktrace
 
 # RUNNER
-FROM openjdk:17-alpine
+FROM docker.io/openjdk:17-alpine
 WORKDIR /usr/src/java-app
 ENV SRC_DIR=/usr/src/java-code
 
