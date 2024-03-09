@@ -1,5 +1,27 @@
 pipeline {
-  agent { kubernetes {} }
+  agent {
+    kubernetes {
+      yaml '''
+      spec:
+        containers:
+        - name: docker
+          image: docker:latest
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          command:
+          - cat
+          tty: true
+          volumeMounts:
+          - mountPath: /var/run/docker.sock
+            name: docker-sock
+        volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+      '''
+    }
+  }
 
   stages {
     stage('Checkout') {
@@ -9,23 +31,23 @@ pipeline {
     }
 
     stage('Build') {
-      agent {
-        kubernetes {
-          yaml '''
-          spec:
-            containers:
-            - name: gradle
-              image: gradle:jdk17
-              command: ['cat']
-              tty: true
-          '''
+      steps {
+        container('docker') {
+          sh 'docker build -t registry.zlp-cloud.ru/backend-java:${BRANCH_NAME} -f ./app/docker/Dockerfile ./app'
+        }
+      }
+    }
+
+    stage('Push') {
+      when {
+        anyOf {
+          branch 'master'
+          branch 'dev'
         }
       }
       steps {
-        container('gradle'){
-          dir('app') {
-            sh './gradlew clean build'
-          }
+        container('docker') {
+          sh 'docker push registry.zlp-cloud.ru/backend-java:${BRANCH_NAME}'
         }
       }
     }
@@ -54,9 +76,9 @@ pipeline {
           sh 'pwd'
           sh 'ls -la'
           dir('chart') {
-            echo 'Deploy'
             sh 'pwd'
             sh 'ls -la'
+            echo 'Deploy'
           }
         }
       }
