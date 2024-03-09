@@ -1,27 +1,5 @@
 pipeline {
-  agent {
-    kubernetes {
-      yaml '''
-      spec:
-        containers:
-        - name: docker
-          image: docker:latest
-          securityContext:
-            privileged: true
-            runAsUser: 0
-          command:
-          - cat
-          tty: true
-          volumeMounts:
-          - mountPath: /var/run/docker.sock
-            name: docker-sock
-        volumes:
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
-      '''
-    }
-  }
+  agent { kubernetes {} }
 
   stages {
     stage('Checkout') {
@@ -30,29 +8,14 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        container('docker') {
-          sh 'docker build -t registry.zlp-cloud.ru/backend-java:${BRANCH_NAME} -f ./app/docker/Dockerfile ./app'
-        }
-      }
-    }
-
-    stage('Push') {
+    stage('Deploy') {
       when {
         anyOf {
           branch 'master'
           branch 'dev'
         }
       }
-      steps {
-        container('docker') {
-          sh 'docker push registry.zlp-cloud.ru/backend-java:${BRANCH_NAME}'
-        }
-      }
-    }
 
-    stage('Deploy') {
       agent {
         kubernetes {
           yaml '''
@@ -62,27 +25,52 @@ pipeline {
               image: ibmcom/k8s-helm:v2.6.0
               command: ['cat']
               tty: true
+            - name: docker
+              image: docker:latest
+              securityContext:
+                privileged: true
+                runAsUser: 0
+              command:
+              - cat
+              tty: true
+              volumeMounts:
+              - mountPath: /var/run/docker.sock
+                name: docker-sock
+            volumes:
+            - name: docker-sock
+              hostPath:
+                path: /var/run/docker.sock
           '''
         }
       }
-      when {
-        anyOf {
-          branch 'master'
-          branch 'dev'
+
+      stages {
+        stage('Build image') {
+          steps {
+            container('docker') {
+              sh 'docker build -t registry.zlp-cloud.ru/backend-java:${BRANCH_NAME} -f ./app/docker/Dockerfile ./app'
+            }
+          }
         }
-      }
-      steps {
-        container('helm'){
-          sh 'pwd'
-          sh 'ls -la'
-          dir('chart') {
-            sh 'pwd'
-            sh 'ls -la'
-            echo 'Deploy'
+
+        stage('Push image') {
+          steps {
+            container('docker') {
+              sh 'docker push registry.zlp-cloud.ru/backend-java:${BRANCH_NAME}'
+            }
+          }
+        }
+
+        stage('Deploy') {
+          steps {
+            container('helm') {
+              dir('chart') {
+                sh 'helm upgrade --namespace lfp-dev backend .'
+              }
+            }
           }
         }
       }
     }
   }
-
 }
