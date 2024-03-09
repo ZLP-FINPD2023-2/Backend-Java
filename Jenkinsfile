@@ -62,10 +62,14 @@ pipeline {
         }
 
         stage('Deploy') {
+          options {
+            timeout(time: 1, unit: 'MINUTES')
+          }
           steps {
             container('helm') {
               dir('chart') {
-                sh 'helm upgrade --namespace lfp-dev backend .'
+                sh 'helm version'
+                sh 'helm upgrade --install --namespace lfp-dev backend .'
               }
             }
           }
