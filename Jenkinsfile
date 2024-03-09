@@ -15,10 +15,6 @@ pipeline {
           volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-sock
-        - name: helm-cli
-          image: registry.zlp-cloud.ru/helm-cli:3.14.2
-          command: ['cat']
-          tty: true
         volumes:
         - name: docker-sock
           hostPath:
@@ -56,26 +52,6 @@ pipeline {
       steps {
         container('docker') {
           sh 'docker push registry.zlp-cloud.ru/backend-java:${BRANCH_NAME}'
-        }
-      }
-    }
-
-    stage('Deploy') {
-      when {
-        anyOf {
-          branch 'master'
-          branch 'dev'
-        }
-      }
-      options {
-        timeout(time: 1, unit: 'MINUTES')
-      }
-      steps {
-        container('helm-cli') {
-          dir('chart') {
-            sh 'helm version'
-            sh 'helm upgrade --install --namespace lfp-dev backend .'
-          }
         }
       }
     }
