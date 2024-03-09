@@ -1,7 +1,3 @@
-node {
-  checkout scm
-}
-
 pipeline {
   agent {
     kubernetes {
@@ -19,8 +15,8 @@ pipeline {
           volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-sock
-        - name: helm
-          image: ibmcom/k8s-helm:v2.6.0
+        - name: helm-cli
+          image: registry.zlp-cloud.ru/helm-cli:3.14.2
           command: ['cat']
           tty: true
         volumes:
@@ -31,7 +27,17 @@ pipeline {
     }
   }
 
+  options {
+    skipDefaultCheckout()
+  }
+
   stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
     stage('Build image') {
       steps {
         container('docker') {
@@ -65,7 +71,7 @@ pipeline {
         timeout(time: 1, unit: 'MINUTES')
       }
       steps {
-        container('helm') {
+        container('helm-cli') {
           dir('chart') {
             sh 'helm version'
             sh 'helm upgrade --install --namespace lfp-dev backend .'
