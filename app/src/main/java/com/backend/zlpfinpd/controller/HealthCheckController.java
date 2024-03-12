@@ -3,7 +3,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class SimpleHealthCheckController {
+public class HealthCheckController {
 
     @GetMapping("/healthcheck")
     public ResponseEntity<Void> healthCheck() {
