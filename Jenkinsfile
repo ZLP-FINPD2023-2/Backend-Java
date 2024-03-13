@@ -37,7 +37,7 @@ pipeline {
     stage('Build image') {
       steps {
         container('docker') {
-          sh 'docker build -t registry.zlp-cloud.ru/backend-java:${BRANCH_NAME} -f ./app/docker/Dockerfile ./app'
+          sh 'docker build -t registry.zlp-cloud.ru/backend-java:build -f ./app/docker/Dockerfile ./app'
         }
       }
     }
@@ -51,6 +51,7 @@ pipeline {
       }
       steps {
         container('docker') {
+          sh 'docker tag registry.zlp-cloud.ru/backend-java:build registry.zlp-cloud.ru/backend-java:${BRANCH_NAME}'
           sh 'docker push registry.zlp-cloud.ru/backend-java:${BRANCH_NAME}'
         }
       }
