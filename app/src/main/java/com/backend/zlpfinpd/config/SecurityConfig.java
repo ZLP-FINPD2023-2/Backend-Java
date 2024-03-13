@@ -17,10 +17,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
     private static final String[] SWAGGER_URLS = {
-            "/swagger-ui/**",
+            "/api/v2/schemes/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-ui.html",
-            "/swagger-ui/**",
             "/webjars/**",
             "/swagger-resources/**"
     };
